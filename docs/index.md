@@ -43,4 +43,6 @@ Computing platform: N/A. We will be developing in WebGL JavaScript, which is cro
 Three.JS: JavaScript library and API for 3D graphics in a web browser using WebGL for speed.
 https://github.com/magwo/fullofstars : A toy N-body simulation in WebGL that we will likely reference for things like shaders and camera movement.
 http://www.asterank.com/api : An open-source database and website that we will likely reference for generating initial particle distributions.
-https://svs.gsfc.nasa.gov/11534 A NASA supercomputer simulation of galaxy formation, collisions etc. Will be useful for guiding our approach to the reach goals.
+https://svs.gsfc.nasa.gov/11534 : A NASA supercomputer simulation of galaxy formation, collisions etc. Will be useful for guiding our approach to the reach goals.
+http://www.physics.rutgers.edu/~sellwood/manual.pdf & http://www.physics.rutgers.edu/galaxy/ : A package developed at Rutgers involving source code for the creation of disk-like and ellipsoidal N-bpdy galaxy simulations, which could be useful for speed-up and efficiency of code.
+http://beltoforion.de/article.php?a=barnes-hut-galaxy-simulator&hl=en&s=idExample#idExample : A N-body galaxy simulator based on Barnes-Hut Galaxy theory that will be useful in helping us achieve our reach goal of galaxy collisions. 
