@@ -4,7 +4,7 @@
 We intend to create a 3D N-body particle simulator for animating the formation of large-scale cosmological structures, e.g. galaxies. We intend to make the simulation real-time and viewable in the browser with Three.js, a 3D graphics library using WebGL. The emphasis will be on aesthetic value rather than physical accuracy. 
 
 ### Team Members
-Andy Campbell `26692398`
+Andrew Campbell `26692398`
 
 Tanmay Ghai `26052650`
 
