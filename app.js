@@ -91,20 +91,20 @@ window.fullofstars = window.fullofstars || {};
             // 'textures/BlueNebular_back.jpg',
 
             // Blue cubemap
-            'textures/bkg1_left.jpg',
-            'textures/bkg1_right.jpg',
-            'textures/bkg1_top.jpg',
-            'textures/bkg1_bottom.jpg',
-            'textures/bkg1_front.jpg',
-            'textures/bkg1_back.jpg',
+            // 'textures/bkg1_left.jpg',
+            // 'textures/bkg1_right.jpg',
+            // 'textures/bkg1_top.jpg',
+            // 'textures/bkg1_bottom.jpg',
+            // 'textures/bkg1_front.jpg',
+            // 'textures/bkg1_back.jpg',
 
             // Red cubemap
-            // 'textures/bkg2_left.jpg',
-            // 'textures/bkg2_right.jpg',
-            // 'textures/bkg2_top.jpg',
-            // 'textures/bkg2_bottom.jpg',
-            // 'textures/bkg2_front.jpg',
-            // 'textures/bkg2_back.jpg',
+            'textures/bkg2_left.jpg',
+            'textures/bkg2_right.jpg',
+            'textures/bkg2_top.jpg',
+            'textures/bkg2_bottom.jpg',
+            'textures/bkg2_front.jpg',
+            'textures/bkg2_back.jpg',
         ];
 
         var skyboxScene = new THREE.Scene();
@@ -140,7 +140,9 @@ window.fullofstars = window.fullofstars || {};
 
 
         var renderer = new THREE.WebGLRenderer({antialias: false});
-        renderer.setSize( 1200, 800 );
+        renderer.setSize( 300, 200 );
+        renderer.setPixelRatio( window.devicePixelRatio ); // adapt to retina display (runs slower)
+        // renderer.setPixelRatio( 1 );
         renderer.setClearColor(0x000000);
         renderer.sortObjects = false;
         document.body.appendChild(renderer.domElement);
@@ -153,6 +155,12 @@ window.fullofstars = window.fullofstars || {};
             10 * fullofstars.MILKY_WAY_DIAMETER * fullofstars.UNIVERSE_SCALE       // Far
         );
 
+        var controls = new THREE.OrbitControls( camera, renderer.domElement );
+        controls.screenSpacePanning = false;
+
+        controls.minDistance = 200;
+        controls.maxDistance = 3000;
+
         var skybox = createSkyboxStuff();
         fullofstars.updateViewport(window, renderer, camera, skybox);
         window.addEventListener('resize', function() {fullofstars.updateViewport(window, renderer, camera, skybox)});
@@ -160,9 +168,9 @@ window.fullofstars = window.fullofstars || {};
 
         var materials = fullofstars.createAllMaterials();
 
-        var BODYCOUNT = 500;
-        var BODYCOUNT_VFX = 20000;
-        var BODYCOUNT_GAS = 300;
+        var BODYCOUNT = 500; // default: 500
+        var BODYCOUNT_VFX = 20000; // default: 20000
+        var BODYCOUNT_GAS = 300; //default: 300
         var FAR_UPDATE_PERIOD = 2.0; // How long between updates of far interactions
         var FAR_BODYCOUNT_PER_60FPS_FRAME = Math.max(1, BODYCOUNT / (60*FAR_UPDATE_PERIOD));
         console.log("FAR_BODYCOUNT_PER_60FPS_FRAME", FAR_BODYCOUNT_PER_60FPS_FRAME);
@@ -188,9 +196,8 @@ window.fullofstars = window.fullofstars || {};
         scene.add(mesh);
         scene.add(meshVfx);
 
-        var CAMERA_MODES = {ORBIT: 0, FOLLOW_PARTICLE: 1}
+        var CAMERA_MODES = {ORBIT: 0, CUSTOM: 2}
         var cameraMode = CAMERA_MODES.ORBIT;
-        var followedParticleIndex = 1;
 
         var TIME_SCALE = Math.pow(10, 9);
         var TIME_SCALES = [Math.pow(10, 9), 3*Math.pow(10, 8), 1*Math.pow(10, 8), 0.0];
@@ -208,15 +215,11 @@ window.fullofstars = window.fullofstars || {};
                     cameraMode = CAMERA_MODES.ORBIT;
                 });
             }
-            else if(_.contains([50, 51], e.which)) {
+            else if(_.contains([50], e.which)) {
                 makeCameraTransition(function() {
-                    cameraMode = CAMERA_MODES.FOLLOW_PARTICLE;
-
-                    followedParticleIndex += e.which === 50 ? -1 : 1;
-                    followedParticleIndex = followedParticleIndex.mod(bodies.length);
-                    console.log(followedParticleIndex);
+                    cameraMode = CAMERA_MODES.CUSTOM;
                 });
-            }
+            }            
         });
 
         function makeCameraTransition(transitionFunc) {
@@ -270,38 +273,20 @@ window.fullofstars = window.fullofstars || {};
 
                 var positionScale = 1.5 * fullofstars.MILKY_WAY_DIAMETER * fullofstars.UNIVERSE_SCALE;
 
-                if(cameraMode === CAMERA_MODES.ORBIT) {
-                    var cameraRotationSpeed = 0.0001;
+                if (cameraMode === CAMERA_MODES.ORBIT) {
+                    var cameraRotationSpeed = 0.01; // default: 0.03
                     camera.position.copy(bodies[0].position);
-                    camera.position.add(new THREE.Vector3(Math.cos(accumulatedRealDtTotal*cameraRotationSpeed) * positionScale, positionScale * 0.7 * Math.sin(accumulatedRealDtTotal * 0.2), Math.sin(accumulatedRealDtTotal*cameraRotationSpeed) * positionScale * 0.1));
+                    camera.position.add(new THREE.Vector3(
+                        Math.cos(accumulatedRealDtTotal*cameraRotationSpeed) * positionScale, 
+                        0.5 * positionScale * 0.7 * Math.sin(accumulatedRealDtTotal * 0.2), // scale to slow vertical movement
+                        Math.sin(accumulatedRealDtTotal*cameraRotationSpeed) * positionScale
+                    ));
 
-                    var cameraLookatRotationSpeed = 0.0001;
+                    var cameraLookatRotationSpeed = 0; // default: 0.01
                     var cameraLookAtScale = 0.2 * positionScale;
                     var cameraLookAtPos = new THREE.Vector3().copy(bodies[0].position);
                     cameraLookAtPos.add(new THREE.Vector3(Math.cos(accumulatedRealDtTotal*cameraLookatRotationSpeed) * cameraLookAtScale, -positionScale * 0.07 * Math.sin(accumulatedRealDtTotal * 0.2), Math.sin(accumulatedRealDtTotal*cameraLookatRotationSpeed) * cameraLookAtScale))
                     camera.lookAt(cameraLookAtPos);
-                } else if(cameraMode === CAMERA_MODES.FOLLOW_PARTICLE) {
-                    var cameraPos = new THREE.Vector3().add(bodies[followedParticleIndex].velocity);
-                    cameraPos.setLength(1);
-                    cameraPos.add(bodies[followedParticleIndex].position)
-                    camera.position.copy(cameraPos);
-                    //camera.position.sub(bodies[followedParticleIndex].velocity);
-
-                    var cameraUp = new THREE.Vector3().copy(bodies[0].position);
-                    cameraUp.sub(cameraPos);
-                    cameraUp.multiplyScalar(-1);
-                    cameraUp.normalize();
-
-                    var cameraLookAtPos = new THREE.Vector3().copy(bodies[followedParticleIndex].velocity);
-                    cameraLookAtPos.setLength(1.5);
-                    cameraLookAtPos.sub(cameraUp);
-                    cameraLookAtPos.add(bodies[followedParticleIndex].position);
-
-                    var m = new THREE.Matrix4();
-                    m.lookAt(cameraPos, cameraLookAtPos, cameraUp);
-
-                    camera.position.copy(cameraPos);
-                    camera.quaternion.setFromRotationMatrix(m);
                 }
 
 
@@ -346,6 +331,7 @@ window.fullofstars = window.fullofstars || {};
 
             function handleAnimationFrame(dt) {
                 update(dt);
+                controls.update();
                 render();
                 window.requestAnimationFrame(handleAnimationFrame);
             };
