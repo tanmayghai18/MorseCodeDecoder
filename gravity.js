@@ -327,13 +327,13 @@ fullofstars.createGravitySystem = function(particleCount, typicalMass, makeBlack
 
         // This creates density variations angularly
         angle += 0.10 * Math.sin(angle * Math.PI*2);
-        
-        var dist = side * 0.5 * Math.random();
-        dist += side * 0.04 * -Math.cos(angle * Math.PI*2);
 
-        var pX = dist * Math.cos(angle);
-        var pY = pX * 0.2 + 0.9*(side*side*0.01/(dist+side*0.1)) * (-.5 + Math.random());
-        var pZ = dist * Math.sin(angle);
+        var dist = side * 0.5 * Math.random();
+        // dist += side * 0.04 * -Math.cos(angle * Math.PI*2);
+
+        var pX = dist * Math.random() * 2 - dist;
+        var pY = (dist * Math.random() * 2 - dist)/2;
+        var pZ = dist * Math.random() * 2 - dist;
 
 
 
@@ -344,15 +344,15 @@ fullofstars.createGravitySystem = function(particleCount, typicalMass, makeBlack
             var mass = BLACK_HOLE_MASS;
             var xVel = 0;
             var yVel = 0;
-        }
+          }
         else {
             var pos = new THREE.Vector3(pX, pY, pZ);
             var mass = typicalMass * 2 * Math.random() * Math.random();
-            
+
 
             // This is newtonian and only works with no dark matter presence
             //var requiredSpeed = fullofstars.UNIVERSE_SCALE *0.3 * speedNeededForCircularOrbit(mass, BLACK_HOLE_MASS, pos.length());//(ourMass, otherBodyMass, distance)
-            
+
             var vel = new THREE.Vector3(pX, pY, pZ);
             vel.normalize();
             var requiredSpeed = typicalStarSpeed * 1.8 + typicalStarSpeed * 0.1 * Math.log(1.1+(10*dist/side));
