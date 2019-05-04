@@ -141,8 +141,8 @@ window.fullofstars = window.fullofstars || {};
 
         var renderer = new THREE.WebGLRenderer({antialias: false});
         renderer.setSize( 300, 200 );
-        renderer.setPixelRatio( window.devicePixelRatio ); // adapt to retina display (runs slower)
-        // renderer.setPixelRatio( 1 );
+        // renderer.setPixelRatio( window.devicePixelRatio ); // adapt to retina display (runs slower)
+        renderer.setPixelRatio( 1 );
         renderer.setClearColor(0x000000);
         renderer.sortObjects = false;
         document.body.appendChild(renderer.domElement);
@@ -159,7 +159,7 @@ window.fullofstars = window.fullofstars || {};
         controls.screenSpacePanning = false;
 
         controls.minDistance = 200;
-        controls.maxDistance = 3000;
+        controls.maxDistance = 5000;
 
         var skybox = createSkyboxStuff();
         fullofstars.updateViewport(window, renderer, camera, skybox);
@@ -171,13 +171,18 @@ window.fullofstars = window.fullofstars || {};
         var BODYCOUNT = 500; // default: 500
         var BODYCOUNT_VFX = 20000; // default: 20000
         var BODYCOUNT_GAS = 300; //default: 300
+        var NUMBLACKHOLES = 3; //default : 1
         var FAR_UPDATE_PERIOD = 2.0; // How long between updates of far interactions
-        var FAR_BODYCOUNT_PER_60FPS_FRAME = Math.max(1, BODYCOUNT / (60*FAR_UPDATE_PERIOD));
+        var FAR_BODYCOUNT_PER_60FPS_FRAME = Math.max(1, BODYCOUNT / (120*FAR_UPDATE_PERIOD));
         console.log("FAR_BODYCOUNT_PER_60FPS_FRAME", FAR_BODYCOUNT_PER_60FPS_FRAME);
 
-        var bodies = fullofstars.createGravitySystem(BODYCOUNT, fullofstars.TYPICAL_STAR_MASS, true);
-        var bodiesVfx = fullofstars.createGravitySystem(BODYCOUNT_VFX, 0.3*fullofstars.TYPICAL_STAR_MASS, false);
-        var bodiesGas = fullofstars.createGravitySystem(BODYCOUNT_GAS, 0.2*fullofstars.TYPICAL_STAR_MASS, false);
+        var blackholearray =[]
+        var bodies = fullofstars.createGravitySystem(BODYCOUNT, fullofstars.TYPICAL_STAR_MASS, NUMBLACKHOLES, blackholearray);
+        for (var i = 0; i < NUMBLACKHOLES; i ++ ){
+          blackholearray.push(bodies[i].position)
+        }
+        var bodiesVfx = fullofstars.createGravitySystem(BODYCOUNT_VFX, 0.3*fullofstars.TYPICAL_STAR_MASS, 0, blackholearray);
+        var bodiesGas = fullofstars.createGravitySystem(BODYCOUNT_GAS, 0.2*fullofstars.TYPICAL_STAR_MASS, 0, blackholearray);
 
 
         var mesh = new THREE.PointCloud( createCloudGeometryFromBodies(bodies), materials.bright );
@@ -219,7 +224,7 @@ window.fullofstars = window.fullofstars || {};
                 makeCameraTransition(function() {
                     cameraMode = CAMERA_MODES.CUSTOM;
                 });
-            }            
+            }
         });
 
         function makeCameraTransition(transitionFunc) {
@@ -277,7 +282,7 @@ window.fullofstars = window.fullofstars || {};
                     var cameraRotationSpeed = 0.01; // default: 0.03
                     camera.position.copy(bodies[0].position);
                     camera.position.add(new THREE.Vector3(
-                        Math.cos(accumulatedRealDtTotal*cameraRotationSpeed) * positionScale, 
+                        Math.cos(accumulatedRealDtTotal*cameraRotationSpeed) * positionScale,
                         0.5 * positionScale * 0.7 * Math.sin(accumulatedRealDtTotal * 0.2), // scale to slow vertical movement
                         Math.sin(accumulatedRealDtTotal*cameraRotationSpeed) * positionScale
                     ));
