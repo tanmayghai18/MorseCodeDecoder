@@ -72,11 +72,6 @@ window.fullofstars = window.fullofstars || {};
 
 
 
-    function updateDebugPanel(heavyBodiesApplicator, vfxBodies, gasBodies) {
-        var dp = $("#debug_panel");
-
-        dp.find(".heavy-bodies .close-interactions .value").text(formatScientificNotationFixedWidth(heavyBodiesApplicator.closeInteractionCount, 4, 2));
-    }
 
 
     function createSkyboxStuff() {
@@ -327,7 +322,6 @@ window.fullofstars = window.fullofstars || {};
                 meshVfx.geometry.verticesNeedUpdate = true;
                 meshGas.geometry.verticesNeedUpdate = true;
                 lastT = t;
-                updateDebugPanel(gravityApplicator, bodiesVfx, bodiesGas);
             };
 
             function handleAnimationFrame(dt) {

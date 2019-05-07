@@ -1112,24 +1112,6 @@ obj.trigger	/Users/aakash/Documents/184/184FinalProj/libs/unobservable.js	/^    
 Observable	/Users/aakash/Documents/184/184FinalProj/libs/unobservable.js	/^unobservable.Observable = function() {$/;"	function	line:106
 unobservable.Observable	/Users/aakash/Documents/184/184FinalProj/libs/unobservable.js	/^};$/;"	class	line:104
 184FinalProj	/Users/aakash/Documents/184/184FinalProj/README.md	/^# 184FinalProj$/;"	function	line:1
-mod	/Users/aakash/Documents/184/184FinalProj/base.js	/^Number.prototype.mod = function(n) {$/;"	function	line:24
-Number	/Users/aakash/Documents/184/184FinalProj/base.js	/^fullofstars.BODYCOUNT_GAS = 300; \/\/default: 300$/;"	class	line:21
-Number.mod	/Users/aakash/Documents/184/184FinalProj/base.js	/^Number.prototype.mod = function(n) {$/;"	method	line:24
-createFrameRequester	/Users/aakash/Documents/184/184FinalProj/base.js	/^window.createFrameRequester = function(timeStep) {$/;"	function	line:30
-register	/Users/aakash/Documents/184/184FinalProj/base.js	/^    requester.register = function(cb) { currentCb = cb; };$/;"	function	line:34
-requester.register	/Users/aakash/Documents/184/184FinalProj/base.js	/^    requester.currentT = 0.0;$/;"	function	line:33
-trigger	/Users/aakash/Documents/184/184FinalProj/base.js	/^    requester.trigger = function() { requester.currentT += timeStep; if(currentCb !== null) { currentCb(requester.currentT); } };$/;"	function	line:35
-requester.trigger	/Users/aakash/Documents/184/184FinalProj/base.js	/^    requester.register = function(cb) { currentCb = cb; };$/;"	function	line:34
-window.createFrameRequester	/Users/aakash/Documents/184/184FinalProj/base.js	/^};$/;"	function	line:26
-newtonianGravityForce	/Users/aakash/Documents/184/184FinalProj/base.js	/^window.newtonianGravityForce = function(body1Mass, body2Mass, distance) {$/;"	function	line:39
-window.newtonianGravityForce	/Users/aakash/Documents/184/184FinalProj/base.js	/^};$/;"	function	line:37
-speedNeededForCircularOrbit	/Users/aakash/Documents/184/184FinalProj/base.js	/^window.speedNeededForCircularOrbit = function(ourMass, otherBodyMass, distance) {$/;"	function	line:46
-window.speedNeededForCircularOrbit	/Users/aakash/Documents/184/184FinalProj/base.js	/^}$/;"	function	line:45
-formatScientificNotationFixedWidth	/Users/aakash/Documents/184/184FinalProj/base.js	/^window.formatScientificNotationFixedWidth = function(num, mantissaDigits, minExponentialDigits) {$/;"	function	line:54
-window.formatScientificNotationFixedWidth	/Users/aakash/Documents/184/184FinalProj/base.js	/^}$/;"	function	line:51
-padding	/Users/aakash/Documents/184/184FinalProj/base.js	/^    var padding = "0000000000000";$/;"	variable	line:69
-testFormatScientificNotationFixedWidth	/Users/aakash/Documents/184/184FinalProj/base.js	/^fullofstars.testFormatScientificNotationFixedWidth = function() {$/;"	function	line:76
-fullofstars.testFormatScientificNotationFixedWidth	/Users/aakash/Documents/184/184FinalProj/base.js	/^}$/;"	function	line:74
 updateViewport	/Users/aakash/Documents/184/184FinalProj/app.js	/^    fullofstars.updateViewport = function(window, renderer, camera, skybox) {$/;"	function	line:7
 updateViewport	/Users/aakash/Documents/184/184FinalProj/app.js	/^window.fullofstars = window.fullofstars || {};$/;"	function	line:1
 createCloudGeometryFromBodies	/Users/aakash/Documents/184/184FinalProj/app.js	/^    function createCloudGeometryFromBodies(bodies) {$/;"	function	line:19
@@ -1140,38 +1122,42 @@ colorStar	/Users/aakash/Documents/184/184FinalProj/app.js	/^    function colorSt
 colorStar	/Users/aakash/Documents/184/184FinalProj/app.js	/^    function colorStar(body, existingColor) {$/;"	function	line:49
 colorGasCloud	/Users/aakash/Documents/184/184FinalProj/app.js	/^    function colorGasCloud(body, existingColor) {$/;"	function	line:68
 colorGasCloud	/Users/aakash/Documents/184/184FinalProj/app.js	/^    function colorGasCloud(body, existingColor) {$/;"	function	line:68
-updateDebugPanel	/Users/aakash/Documents/184/184FinalProj/app.js	/^    function updateDebugPanel(heavyBodiesApplicator, vfxBodies, gasBodies) {$/;"	function	line:75
-updateDebugPanel	/Users/aakash/Documents/184/184FinalProj/app.js	/^    function updateDebugPanel(heavyBodiesApplicator, vfxBodies, gasBodies) {$/;"	function	line:75
-createSkyboxStuff	/Users/aakash/Documents/184/184FinalProj/app.js	/^    function createSkyboxStuff() {$/;"	function	line:82
-createSkyboxStuff	/Users/aakash/Documents/184/184FinalProj/app.js	/^    function createSkyboxStuff() {$/;"	function	line:82
+createSkyboxStuff	/Users/aakash/Documents/184/184FinalProj/app.js	/^    function createSkyboxStuff() {$/;"	function	line:77
+createSkyboxStuff	/Users/aakash/Documents/184/184FinalProj/app.js	/^    function createSkyboxStuff() {$/;"	function	line:77
+makeCameraTransition	/Users/aakash/Documents/184/184FinalProj/app.js	/^                makeCameraTransition(function() {$/;"	function	line:210
 makeCameraTransition	/Users/aakash/Documents/184/184FinalProj/app.js	/^                makeCameraTransition(function() {$/;"	function	line:215
-makeCameraTransition	/Users/aakash/Documents/184/184FinalProj/app.js	/^                makeCameraTransition(function() {$/;"	function	line:220
-makeCameraTransition	/Users/aakash/Documents/184/184FinalProj/app.js	/^        function makeCameraTransition(transitionFunc) {$/;"	function	line:226
-render	/Users/aakash/Documents/184/184FinalProj/app.js	/^        function render() {$/;"	function	line:233
-onProgress	/Users/aakash/Documents/184/184FinalProj/app.js	/^        THREE.DefaultLoadingManager.onProgress = function (item, loaded, total) {$/;"	function	line:252
-startGalaxySimulation	/Users/aakash/Documents/184/184FinalProj/app.js	/^        function startGalaxySimulation() {$/;"	function	line:269
-update	/Users/aakash/Documents/184/184FinalProj/app.js	/^            function update(t) {$/;"	function	line:270
-handleAnimationFrame	/Users/aakash/Documents/184/184FinalProj/app.js	/^            function handleAnimationFrame(dt) {$/;"	function	line:333
+makeCameraTransition	/Users/aakash/Documents/184/184FinalProj/app.js	/^        function makeCameraTransition(transitionFunc) {$/;"	function	line:221
+render	/Users/aakash/Documents/184/184FinalProj/app.js	/^        function render() {$/;"	function	line:228
+onProgress	/Users/aakash/Documents/184/184FinalProj/app.js	/^        THREE.DefaultLoadingManager.onProgress = function (item, loaded, total) {$/;"	function	line:247
+startGalaxySimulation	/Users/aakash/Documents/184/184FinalProj/app.js	/^        function startGalaxySimulation() {$/;"	function	line:264
+update	/Users/aakash/Documents/184/184FinalProj/app.js	/^            function update(t) {$/;"	function	line:265
+handleAnimationFrame	/Users/aakash/Documents/184/184FinalProj/app.js	/^            function handleAnimationFrame(dt) {$/;"	function	line:327
+mod	/Users/aakash/Documents/184/184FinalProj/base.js	/^Number.prototype.mod = function(n) {$/;"	function	line:24
+Number	/Users/aakash/Documents/184/184FinalProj/base.js	/^fullofstars.BODYCOUNT_GAS = 300; \/\/default: 300$/;"	class	line:21
+Number.mod	/Users/aakash/Documents/184/184FinalProj/base.js	/^Number.prototype.mod = function(n) {$/;"	method	line:24
+createFrameRequester	/Users/aakash/Documents/184/184FinalProj/base.js	/^window.createFrameRequester = function(timeStep) {$/;"	function	line:30
+register	/Users/aakash/Documents/184/184FinalProj/base.js	/^    requester.register = function(cb) { currentCb = cb; };$/;"	function	line:34
+requester.register	/Users/aakash/Documents/184/184FinalProj/base.js	/^    requester.currentT = 0.0;$/;"	function	line:33
+trigger	/Users/aakash/Documents/184/184FinalProj/base.js	/^    requester.trigger = function() { requester.currentT += timeStep; if(currentCb !== null) { currentCb(requester.currentT); } };$/;"	function	line:35
+requester.trigger	/Users/aakash/Documents/184/184FinalProj/base.js	/^    requester.register = function(cb) { currentCb = cb; };$/;"	function	line:34
+window.createFrameRequester	/Users/aakash/Documents/184/184FinalProj/base.js	/^};$/;"	function	line:26
 PointMassBody	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^function PointMassBody(mass, position, velocity) {$/;"	function	line:7
 PointMassBody	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^function PointMassBody(mass, position, velocity) {$/;"	class	line:7
-updateAndResetForce	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^PointMassBody.prototype.updateAndResetForce = function(dt) {$/;"	function	line:20
-PointMassBody.updateAndResetForce	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^PointMassBody.prototype.updateAndResetForce = function(dt) {$/;"	method	line:20
-verletPositionStep	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^PointMassBody.verletPositionStep = function(bodies, dt) {$/;"	function	line:32
-PointMassBody.verletPositionStep	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^};$/;"	function	line:30
-verletAccelerationStep	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^PointMassBody.verletAccelerationStep = function(bodies, dt) {$/;"	function	line:62
-PointMassBody.verletAccelerationStep	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^};$/;"	function	line:60
-velocityVerletUpdate	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^PointMassBody.velocityVerletUpdate = function(bodies, dt, isPositionStep) {$/;"	function	line:85
-PointMassBody.velocityVerletUpdate	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^};$/;"	function	line:82
-createTwoTierSmartGravityApplicator	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^fullofstars.createTwoTierSmartGravityApplicator = function(attractedCelestials, attractingCelestials) {$/;"	function	line:94
-fullofstars.createTwoTierSmartGravityApplicator.applicator.closeInteractionCount	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    var applicator = {closeInteractionCount: 0};$/;"	property	line:95
-applypairForces	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    applicator.applypairForces = function() {$/;"	function	line:105
-applicator.applypairForces	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    var currentFarAttractedIndex = 0;$/;"	function	line:100
-handleBlackHoles	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    applicator.handleBlackHoles = function() {$/;"	function	line:112
-applicator.handleBlackHoles	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    }$/;"	function	line:109
-handlePairForces	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    applicator.handlePairForces = function(bodyCountToUpdatePairForcesFor){$/;"	function	line:151
-applicator.handlePairForces	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    };$/;"	function	line:149
-updateForces	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    applicator.updateForces = function(bodyCountToUpdatePairForcesFor) {$/;"	function	line:192
-applicator.updateForces	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    };$/;"	function	line:190
-fullofstars.createTwoTierSmartGravityApplicator	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^};$/;"	function	line:91
-createGravitySystem	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^fullofstars.createGravitySystem = function(particleCount, typicalMass, numBlackHole, blackholepos) {$/;"	function	line:203
-fullofstars.createGravitySystem	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^}$/;"	function	line:198
+verletPositionStep	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^PointMassBody.verletPositionStep = function(bodies, dt) {$/;"	function	line:17
+PointMassBody.verletPositionStep	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^PointMassBody.prototype = Object.create(Object.prototype);$/;"	function	line:15
+verletAccelerationStep	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^PointMassBody.verletAccelerationStep = function(bodies, dt) {$/;"	function	line:45
+PointMassBody.verletAccelerationStep	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^};$/;"	function	line:43
+velocityVerletUpdate	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^PointMassBody.velocityVerletUpdate = function(bodies, dt, isPositionStep) {$/;"	function	line:66
+PointMassBody.velocityVerletUpdate	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^};$/;"	function	line:63
+createTwoTierSmartGravityApplicator	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^fullofstars.createTwoTierSmartGravityApplicator = function(attractedCelestials, attractingCelestials) {$/;"	function	line:75
+applyPairForces	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    applicator.applyPairForces = function() {$/;"	function	line:84
+applicator.applyPairForces	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    var currentFarAttractedIndex = 0;$/;"	function	line:81
+handleBlackHoles	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    applicator.handleBlackHoles = function() {$/;"	function	line:91
+applicator.handleBlackHoles	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    }$/;"	function	line:88
+handlePairForces	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    applicator.handlePairForces = function(bodyCountToUpdatePairForcesFor){$/;"	function	line:130
+applicator.handlePairForces	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    };$/;"	function	line:128
+updateForces	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    applicator.updateForces = function(bodyCountToUpdatePairForcesFor) {$/;"	function	line:171
+applicator.updateForces	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    };$/;"	function	line:169
+fullofstars.createTwoTierSmartGravityApplicator	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^};$/;"	function	line:72
+createGravitySystem	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^fullofstars.createGravitySystem = function(particleCount, typicalMass, numBlackHole, blackholepos) {$/;"	function	line:182
+fullofstars.createGravitySystem	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^}$/;"	function	line:177

@@ -14,23 +14,7 @@ function PointMassBody(mass, position, velocity) {
 }
 PointMassBody.prototype = Object.create(Object.prototype);
 
-
-var tempVec = new THREE.Vector3(0,0,0); // To avoid allocations during updates
-var tempVec2 = new THREE.Vector3(0,0,0); // To avoid allocations during updates
-PointMassBody.prototype.updateAndResetForce = function(dt) {
-	var accelerationFactor = this.invMass * dt;
-	var force = this.force;
-	var velocity = this.velocity;
-	tempVec.set(force.x*accelerationFactor, force.y*accelerationFactor, force.z*accelerationFactor);
-	this.velocity.add(tempVec);
-	tempVec.set(velocity.x*dt, velocity.y*dt, velocity.z*dt);
-	this.position.add(tempVec);
-    this.prevForce.copy(force);
-	this.force.set(0,0,0);
-};
-
 PointMassBody.verletPositionStep = function(bodies, dt) {
-    // Highly inlined for performance
     var velocityishX = 0.0, velocityishY = 0.0, velocityishZ = 0.0;
     for(var i=0, len=bodies.length; i<len; i++) {
         var body = bodies[i];
@@ -48,7 +32,6 @@ PointMassBody.verletPositionStep = function(bodies, dt) {
         velocityishY += force.y*accelerationFactor;
         velocityishZ += force.z*accelerationFactor;
 
-        //VERLET: position += timestep * (velocity + timestep * acceleration / 2);
         position.x += velocityishX*dt;
         position.y += velocityishY*dt;
         position.z += velocityishZ*dt;
@@ -60,13 +43,11 @@ PointMassBody.verletPositionStep = function(bodies, dt) {
 };
 
 PointMassBody.verletAccelerationStep = function(bodies, dt) {
-    // Highly inlined for performance
     for(var i=0, len=bodies.length; i<len; i++) {
         var body = bodies[i];
         var force = body.force;
         var velocity = body.velocity;
         var prevForce = body.prevForce;
-        //VERLET: velocity += timestep * (acceleration + newAcceleration) / 2;
         var accelerationFactor = body.invMass * dt * 0.5;
 
         velocity.x += (force.x+prevForce.x)*accelerationFactor;
@@ -92,7 +73,7 @@ PointMassBody.velocityVerletUpdate = function(bodies, dt, isPositionStep) {
 
 
 fullofstars.createTwoTierSmartGravityApplicator = function(attractedCelestials, attractingCelestials) {
-    var applicator = {closeInteractionCount: 0};
+    var applicator = {};
     var attractingIsAttracted = attractingCelestials === attractedCelestials;
 
     var pairForces = _.map(attractedCelestials, function() { return new THREE.Vector3(0, 0, 0); });
@@ -100,9 +81,7 @@ fullofstars.createTwoTierSmartGravityApplicator = function(attractedCelestials, 
     var currentFarAttractedIndex = 0;
 
 
-
-
-    applicator.applypairForces = function() {
+    applicator.applyPairForces = function() {
         for(var i=0, len=attractedCelestials.length; i<len; i++) {
             attractedCelestials[i].force.add(pairForces[i]);
         }
@@ -192,7 +171,7 @@ fullofstars.createTwoTierSmartGravityApplicator = function(attractedCelestials, 
     applicator.updateForces = function(bodyCountToUpdatePairForcesFor) {
         applicator.handleBlackHoles();
         applicator.handlePairForces(bodyCountToUpdatePairForcesFor);
-        applicator.applypairForces();
+        applicator.applyPairForces();
     };
     return applicator;
 }
@@ -215,13 +194,12 @@ fullofstars.createGravitySystem = function(particleCount, typicalMass, numBlackH
             var mass = BLACK_HOLE_MASS;
 
             var dist = side * 2 * Math.random();
-            // var pX = dist * Math.random() * 4 - dist * 2;
-            // var pY = (dist * Math.random() * 2 - dist);
-            // var pZ = dist * Math.random() * 4 - dist * 2;
-            var pX = 0;
-            var pY = 0;
-            var pZ =0;
-
+            var pX = dist * Math.random() * 4 - dist * 2;
+            var pY = (dist * Math.random() * 2 - dist);
+            var pZ = dist * Math.random() * 4 - dist * 2;
+            // var pX = 0;
+            // var pY = 0;
+            // var pZ = 0;
 
             var vel = new THREE.Vector3(pX, pY, pZ);
             vel.normalize();
@@ -229,9 +207,7 @@ fullofstars.createGravitySystem = function(particleCount, typicalMass, numBlackH
             var xVel = vel.z * requiredSpeed;
             var yVel = vel.y * requiredSpeed;
             var zVel = -vel.x * requiredSpeed;
-            // var xVel = 0;
-            // var yVel = 0;
-            // var zVel = 0
+
             var body = new PointMassBody(mass, new THREE.Vector3(pX, pY, pZ), new THREE.Vector3(xVel, yVel, zVel));
 
           }
@@ -240,7 +216,7 @@ fullofstars.createGravitySystem = function(particleCount, typicalMass, numBlackH
 
             var closest_bh = Math.floor(Math.random() * (numBlackHole));
             var bh_pos = bodies[closest_bh].position;
-            var dist = side * 0.8 * Math.random();
+            var dist = side * 0.4 * Math.random();
             var pX = dist * Math.random() * 2 - dist + bh_pos.x;
             var pY = (dist * Math.random() * 2 - dist)/2 + bh_pos.y;
             var pZ = dist * Math.random() * 2 - dist + bh_pos.z;
@@ -259,7 +235,7 @@ fullofstars.createGravitySystem = function(particleCount, typicalMass, numBlackH
 
           var closest_bh = Math.floor(Math.random() * (blackholepos.length));
           var bh_pos = blackholepos[closest_bh];
-          var dist = side * 0.8 * Math.random();
+          var dist = side * 0.5 * Math.random();
           var pX = dist * Math.random() * 2 - dist + bh_pos.x;
           var pY = (dist * Math.random() * 2 - dist)/2 + bh_pos.y;
           var pZ = dist * Math.random() * 2 - dist + bh_pos.z;
