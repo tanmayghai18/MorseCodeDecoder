@@ -72,11 +72,6 @@ window.fullofstars = window.fullofstars || {};
 
 
 
-    function updateDebugPanel(heavyBodiesApplicator, vfxBodies, gasBodies) {
-        var dp = $("#debug_panel");
-
-        dp.find(".heavy-bodies .close-interactions .value").text(formatScientificNotationFixedWidth(heavyBodiesApplicator.closeInteractionCount, 4, 2));
-    }
 
 
     function createSkyboxStuff() {
@@ -168,21 +163,17 @@ window.fullofstars = window.fullofstars || {};
 
         var materials = fullofstars.createAllMaterials();
 
-        var BODYCOUNT = 500; // default: 500
-        var BODYCOUNT_VFX = 20000; // default: 20000
-        var BODYCOUNT_GAS = 300; //default: 300
-        var NUMBLACKHOLES = 3; //default : 1
         var FAR_UPDATE_PERIOD = 2.0; // How long between updates of far interactions
-        var FAR_BODYCOUNT_PER_60FPS_FRAME = Math.max(1, BODYCOUNT / (120*FAR_UPDATE_PERIOD));
+        var FAR_BODYCOUNT_PER_60FPS_FRAME = Math.max(1, Math.ceil(fullofstars.BODYCOUNT / (120*FAR_UPDATE_PERIOD)));
         console.log("FAR_BODYCOUNT_PER_60FPS_FRAME", FAR_BODYCOUNT_PER_60FPS_FRAME);
 
         var blackholearray =[]
-        var bodies = fullofstars.createGravitySystem(BODYCOUNT, fullofstars.TYPICAL_STAR_MASS, NUMBLACKHOLES, blackholearray);
-        for (var i = 0; i < NUMBLACKHOLES; i ++ ){
+        var bodies = fullofstars.createGravitySystem(fullofstars.BODYCOUNT, fullofstars.TYPICAL_STAR_MASS, fullofstars.NUMBLACKHOLES, blackholearray);
+        for (var i = 0; i < fullofstars.NUMBLACKHOLES; i ++ ){
           blackholearray.push(bodies[i].position)
         }
-        var bodiesVfx = fullofstars.createGravitySystem(BODYCOUNT_VFX, 0.3*fullofstars.TYPICAL_STAR_MASS, 0, blackholearray);
-        var bodiesGas = fullofstars.createGravitySystem(BODYCOUNT_GAS, 0.2*fullofstars.TYPICAL_STAR_MASS, 0, blackholearray);
+        var bodiesVfx = fullofstars.createGravitySystem(fullofstars.BODYCOUNT_VFX, 0.3*fullofstars.TYPICAL_STAR_MASS, 0, blackholearray);
+        var bodiesGas = fullofstars.createGravitySystem(fullofstars.BODYCOUNT_GAS, 0.2*fullofstars.TYPICAL_STAR_MASS, 0, blackholearray);
 
 
         var mesh = new THREE.PointCloud( createCloudGeometryFromBodies(bodies), materials.bright );
@@ -331,7 +322,6 @@ window.fullofstars = window.fullofstars || {};
                 meshVfx.geometry.verticesNeedUpdate = true;
                 meshGas.geometry.verticesNeedUpdate = true;
                 lastT = t;
-                updateDebugPanel(gravityApplicator, bodiesVfx, bodiesGas);
             };
 
             function handleAnimationFrame(dt) {

@@ -14,23 +14,7 @@ function PointMassBody(mass, position, velocity) {
 }
 PointMassBody.prototype = Object.create(Object.prototype);
 
-
-var tempVec = new THREE.Vector3(0,0,0); // To avoid allocations during updates
-var tempVec2 = new THREE.Vector3(0,0,0); // To avoid allocations during updates
-PointMassBody.prototype.updateAndResetForce = function(dt) {
-	var accelerationFactor = this.invMass * dt;
-	var force = this.force;
-	var velocity = this.velocity;
-	tempVec.set(force.x*accelerationFactor, force.y*accelerationFactor, force.z*accelerationFactor);
-	this.velocity.add(tempVec);
-	tempVec.set(velocity.x*dt, velocity.y*dt, velocity.z*dt);
-	this.position.add(tempVec);
-    this.prevForce.copy(force);
-	this.force.set(0,0,0);
-};
-
 PointMassBody.verletPositionStep = function(bodies, dt) {
-    // Highly inlined for performance
     var velocityishX = 0.0, velocityishY = 0.0, velocityishZ = 0.0;
     for(var i=0, len=bodies.length; i<len; i++) {
         var body = bodies[i];
@@ -48,7 +32,6 @@ PointMassBody.verletPositionStep = function(bodies, dt) {
         velocityishY += force.y*accelerationFactor;
         velocityishZ += force.z*accelerationFactor;
 
-        //VERLET: position += timestep * (velocity + timestep * acceleration / 2);
         position.x += velocityishX*dt;
         position.y += velocityishY*dt;
         position.z += velocityishZ*dt;
@@ -60,13 +43,11 @@ PointMassBody.verletPositionStep = function(bodies, dt) {
 };
 
 PointMassBody.verletAccelerationStep = function(bodies, dt) {
-    // Highly inlined for performance
     for(var i=0, len=bodies.length; i<len; i++) {
         var body = bodies[i];
         var force = body.force;
         var velocity = body.velocity;
         var prevForce = body.prevForce;
-        //VERLET: velocity += timestep * (acceleration + newAcceleration) / 2;
         var accelerationFactor = body.invMass * dt * 0.5;
 
         velocity.x += (force.x+prevForce.x)*accelerationFactor;
@@ -92,220 +73,105 @@ PointMassBody.velocityVerletUpdate = function(bodies, dt, isPositionStep) {
 
 
 fullofstars.createTwoTierSmartGravityApplicator = function(attractedCelestials, attractingCelestials) {
-    var applicator = {closeInteractionCount: 0};
+    var applicator = {};
     var attractingIsAttracted = attractingCelestials === attractedCelestials;
 
-    var closeInteractions = _.map(attractedCelestials, function() { var arr = new Array(4); arr[0] = arr[1] = arr[2] = arr[3] = -1; return arr; });
-    var closeInteractionCount = 0;
-
-    var farForces = _.map(attractedCelestials, function() { return new THREE.Vector3(0, 0, 0); });
+    var pairForces = _.map(attractedCelestials, function() { return new THREE.Vector3(0, 0, 0); });
 
     var currentFarAttractedIndex = 0;
 
-    var FAR_THRESHOLD_SQR = Math.pow(40 * fullofstars.UNIVERSE_SCALE_RECIPROCAL, 2); // TODO: Make this more related to mass and distance combined
-    var GAS_INTERACTION_DISTANCE_SQRD = Math.pow(30 * fullofstars.UNIVERSE_SCALE_RECIPROCAL, 2);
 
-    applicator.handleCloseInteractions = function() {
-        // Highly inlined for performance
-        var typicalStarMass = fullofstars.TYPICAL_STAR_MASS;
-        var universeScaleRecipr = fullofstars.UNIVERSE_SCALE_RECIPROCAL;
-        var gravitationalConstant = fullofstars.GRAVITATIONAL_CONSTANT;
-        var gravityEpsilon = fullofstars.GRAVITY_EPSILON;
-        var gravityEpsilonSqrd = gravityEpsilon*gravityEpsilon;
+    applicator.applyPairForces = function() {
+        for(var i=0, len=attractedCelestials.length; i<len; i++) {
+            attractedCelestials[i].force.add(pairForces[i]);
+        }
+    }
 
 
-        var body1To2X = 0.0, body1To2Y = 0.0; body1To2Z = 0.0;
-        var relativeVelX = 0.0, relativeVelY = 0.0; relativeVelZ = 0.0;
+    applicator.handleBlackHoles = function() {
+      // Highly inlined for performance
+      var typicalStarMass = fullofstars.TYPICAL_STAR_MASS;
+      var universeScaleRecipr = fullofstars.UNIVERSE_SCALE_RECIPROCAL;
+      var gravitationalConstant = fullofstars.GRAVITATIONAL_CONSTANT;
+      var gravityEpsilon = fullofstars.GRAVITY_EPSILON;
+      var gravityEpsilonSqrd = gravityEpsilon*gravityEpsilon;
 
-        for(var i=0, outerLen=closeInteractions.length; i<outerLen; i++) {
-            for(var innerI=0, innerLen=closeInteractions[i].length; innerI<innerLen; innerI++) {
-                if(closeInteractions[i][innerI] === -1) {
-                    continue;
-                }
-                var body1 = attractedCelestials[i];
-                var body2 = attractingCelestials[closeInteractions[i][innerI]];
 
-                var body1pos = body1.position;
-                var body2pos = body2.position;
+      var sqrDist = 0.0, force;
+      var temp_force = new THREE.Vector3(0,0,0); // To avoid allocations during updates
+      var DARK_FORCE_COEFFICIENT = 4*Math.pow(10, -20) * gravitationalConstant;
+      for (var i = 0, len=attractedCelestials.length; i<len; i ++ ){ // iterate through all bodies
+        for (var j = 0; j < fullofstars.NUMBLACKHOLES; j ++ ){ //iterate through all blackholes
+          if (attractingIsAttracted && i == j){ //skip if bodies, bodies interaction and objects are the same
+            continue;
+          }
 
-                var body1force = body1.force;
-                var body2force = body2.force;
+          var body1 = attractedCelestials[i];
+          var body2 = attractingCelestials[j];
 
-                var massSum = body1.mass + body2.mass;
-                var massProduct = body1.mass * body2.mass;
+          var body1pos = body1.position;
+          var body2pos = body2.position;
 
-                var isBlackHoleInteraction = body1.mass > typicalStarMass * 100 || body2.mass > typicalStarMass * 100;
+          var sqrDist = body1pos.distanceToSquared(body2pos) * universeScaleRecipr * universeScaleRecipr;
+          var dist =  Math.sqrt(sqrDist);
+          force = fullofstars.GRAVITATIONAL_CONSTANT * body1.mass * body2.mass / Math.pow(sqrDist + gravityEpsilonSqrd, 3/2);
 
-                // Calculate body1To2 and put into proper scale
-                body1To2X = (body2pos.x - body1pos.x)*universeScaleRecipr;
-                body1To2Y = (body2pos.y - body1pos.y)*universeScaleRecipr;
-                body1To2Z = (body2pos.z - body1pos.z)*universeScaleRecipr;
+          // var darkForce = DARK_FORCE_COEFFICIENT * gravitationalConstant
+          force += DARK_FORCE_COEFFICIENT * (body1.mass * body2.mass / dist);
 
-                var sqrDist = body1To2X*body1To2X + body1To2Y*body1To2Y + body1To2Z*body1To2Z;
-                var dist = Math.sqrt(sqrDist);
+          var bodyforce = body1.force;
+          temp_force.subVectors(body2.position, body1.position).normalize().multiplyScalar(force);
+          bodyforce.add(temp_force);
+        }
+      }
 
-                var force = gravitationalConstant * ((massProduct*dist) / Math.pow(sqrDist + gravityEpsilonSqrd, 3/2));
+    };
 
-                 if(isBlackHoleInteraction) {
-                    // Apply fake dark matter effect from black hole
-                    var DARK_FORCE_COEFFICIENT = 4*Math.pow(10, -20);
-                    var darkForce = DARK_FORCE_COEFFICIENT * gravitationalConstant * (massProduct / dist);
-                    force += darkForce;
-                }
+    applicator.handlePairForces = function(bodyCountToUpdatePairForcesFor){
+      var typicalStarMass = fullofstars.TYPICAL_STAR_MASS;
+      var universeScaleRecipr = fullofstars.UNIVERSE_SCALE_RECIPROCAL;
+      var gravitationalConstant = fullofstars.GRAVITATIONAL_CONSTANT;
+      var gravityEpsilon = fullofstars.GRAVITY_EPSILON;
+      var gravityEpsilonSqrd = gravityEpsilon*gravityEpsilon;
 
-                // TODO: Find a way to not normalize - we already have squared distance and a vector with the full length
-                var setLengthMultiplier = force / dist;
+      var body1To2X = 0.0, body1To2Y = 0.0; body1To2Z = 0.0;
 
-                // Add force based on force amount and direction between bodies
-                body1force.x += body1To2X * setLengthMultiplier;
-                body1force.y += body1To2Y * setLengthMultiplier;
-                body1force.z += body1To2Z * setLengthMultiplier;
+      var attractedCount = attractedCelestials.length;
+      var sqrDist = 0.0, force = 0.0;
+      var temp_force = new THREE.Vector3(0,0,0); // To avoid allocations during updates
 
-                if(attractingIsAttracted); {
-                    body2force.x -= body1To2X * setLengthMultiplier;
-                    body2force.y -= body1To2Y * setLengthMultiplier;
-                    body2force.z -= body1To2Z * setLengthMultiplier;
-                }
-                var isClose = sqrDist < FAR_THRESHOLD_SQR || isBlackHoleInteraction;
+      for(var n=0; n<bodyCountToUpdatePairForcesFor; n++) {
+          currentFarAttractedIndex++;
+          if(currentFarAttractedIndex >= attractedCount) {
+              currentFarAttractedIndex = 0;
+          }
+          var body1 = attractedCelestials[currentFarAttractedIndex];
 
-                ///console.log("gas?", sqrDist, GAS_INTERACTION_DISTANCE_SQRD);
-                if(!isBlackHoleInteraction && sqrDist < GAS_INTERACTION_DISTANCE_SQRD) {
-                    // Handle some sort of gas interaction
-                    var gasForce = (dist) / Math.pow(sqrDist + gravityEpsilonSqrd, 3/2);
-                    gasForce *= Math.pow(10, 19);
-                    var body1vel = body1.velocity;
-                    var body2vel = body2.velocity;
+          var farForce = pairForces[currentFarAttractedIndex];
+          farForce.set(0,0,0);
+          var attractedBody = attractedCelestials[currentFarAttractedIndex];
 
-                    relativeVelX = body1vel.x - body2vel.x;
-                    relativeVelY = body1vel.y - body2vel.y;
-                    relativeVelZ = body1vel.z - body2vel.z;
+          for(var j=fullofstars.NUMBLACKHOLES; j<fullofstars.BODYCOUNT; j++) {
+              if(attractingIsAttracted && j == currentFarAttractedIndex) {
+                continue;
+              }
+              temp_force.set(0,0,0);
+              var body2 = attractingCelestials[j];
 
-                    body1force.x -= relativeVelX * gasForce * body1.mass;
-                    body1force.y -= relativeVelY * gasForce * body1.mass;
-                    body1force.z -= relativeVelZ * gasForce * body1.mass;
+              var sqrDist = body1.position.distanceToSquared(body2.position) * universeScaleRecipr * universeScaleRecipr;
+              force = fullofstars.GRAVITATIONAL_CONSTANT * body1.mass * body2.mass / Math.pow(sqrDist + gravityEpsilonSqrd, 3/2);
+              temp_force.subVectors(body2.position, body1.position).normalize().multiplyScalar(force);
+              farForce.add(temp_force);
 
-                    if(attractingIsAttracted); {
-                        body2force.x += relativeVelX * gasForce * body2.mass;
-                        body2force.y += relativeVelY * gasForce * body2.mass;
-                        body2force.z += relativeVelZ * gasForce * body2.mass;
-                    }
-                }
-
-                if(!isClose) {
-                    // Remove this interaction
-                    closeInteractions[i][innerI] = -1;
-                    closeInteractionCount--;
-                }
-            }
+          }
+          pairForces[currentFarAttractedIndex] = farForce;
         }
     };
 
-    applicator.handleFarInteractions = function(bodyCountToUpdateFarForcesFor) {
-        // Highly optimised and inlined for performance
-        var typicalStarMass = fullofstars.TYPICAL_STAR_MASS;
-        var universeScaleRecipr = fullofstars.UNIVERSE_SCALE_RECIPROCAL;
-        var gravitationalConstant = fullofstars.GRAVITATIONAL_CONSTANT;
-        var gravityEpsilon = fullofstars.GRAVITY_EPSILON;
-        var gravityEpsilonSqrd = gravityEpsilon*gravityEpsilon;
-
-        var body1To2X = 0.0, body1To2Y = 0.0; body1To2Z = 0.0;
-
-        var attractedCount = attractedCelestials.length;
-        for(var n=0; n<bodyCountToUpdateFarForcesFor; n++) {
-            currentFarAttractedIndex++;
-            if(currentFarAttractedIndex >= attractedCount) {
-                currentFarAttractedIndex = 0;
-            }
-
-            // Make a sum of all the other bodies attraction forces and save them
-            var farForce = farForces[currentFarAttractedIndex];
-            farForce.set(0,0,0);
-            var attractedBody = attractedCelestials[currentFarAttractedIndex];
-            // TODO: Details with attracting/attracted storage here...
-            for(var attractingIndex=0, len=attractingCelestials.length; attractingIndex<len; attractingIndex++) {
-                if(attractingIndex !== currentFarAttractedIndex || !attractingIsAttracted) {
-
-                    // TODO: Make this code not insane
-
-                    var interactions = closeInteractions[currentFarAttractedIndex];
-                    var isCloseInteraction = false;
-
-                    for(var closeInteractionIndex=0, closeInteractionLen=interactions.length; closeInteractionIndex<closeInteractionLen; closeInteractionIndex++) {
-                        if(interactions[closeInteractionIndex] === attractingIndex) {
-                          isCloseInteraction = true;
-                          break;
-                        }
-                    }
-                    if(!isCloseInteraction && attractingIsAttracted) {
-                        // Need to make extra check when attracting is attracted - close interaction might be stored in other direction
-                        // TODO: Maybe double-direction store close interactions for performance?
-                        for(var closeInteractionIndex=0, closeInteractionLen=interactions.length; closeInteractionIndex<closeInteractionLen; closeInteractionIndex++) {
-                            if(interactions[closeInteractionIndex] === attractingIndex) {
-                              isCloseInteraction = true;
-                              break;
-                            }
-                        }
-                    }
-                    if(!isCloseInteraction) {
-                        // TODO: Inline and optimise
-                        var body1 = attractedBody;
-                        var body2 = attractingCelestials[attractingIndex];
-
-                        var body1pos = body1.position;
-                        var body2pos = body2.position;
-
-                        body1To2X = (body2pos.x - body1pos.x) * universeScaleRecipr;
-                        body1To2Y = (body2pos.y - body1pos.y) * universeScaleRecipr;
-                        body1To2Z = (body2pos.z - body1pos.z) * universeScaleRecipr;
-
-                        var sqrDist = body1To2X*body1To2X + body1To2Y*body1To2Y + body1To2Z*body1To2Z;
-                        var dist = Math.sqrt(sqrDist);
-
-                        var force = gravitationalConstant * ((body1.mass*body2.mass*dist) / Math.pow(sqrDist + gravityEpsilon*gravityEpsilon, 3/2));
-                        // TODO: Find a way to not normalize - we already have squared distance and a vector with the full length
-                        var setLengthMultiplier = force / dist;
-
-                        // Add force based on force amount and direction between bodies
-                        farForce.x += body1To2X * setLengthMultiplier;
-                        farForce.y += body1To2Y * setLengthMultiplier;
-                        farForce.z += body1To2Z * setLengthMultiplier;
-
-                        if(sqrDist < FAR_THRESHOLD_SQR || body1.mass+body2.mass > typicalStarMass * 100) {
-                            isCloseInteraction = true; // This should be handled as a close interaction
-                        }
-
-                        if(isCloseInteraction) { //addGravityToVector(attractedBody, attractingCelestials[attractingIndex], farForce)) {
-                            // Should turn this into a close interaction
-                            for(var closeInteractionIndex=0, closeInteractionLen=interactions.length; closeInteractionIndex<closeInteractionLen; closeInteractionIndex++) {
-                                if(interactions[closeInteractionIndex] === -1) {
-                                    interactions[closeInteractionIndex] = attractingIndex;
-                                    break;
-                                }
-                            }
-                            if(closeInteractionIndex === closeInteractionLen) {
-                                interactions.push(attractingIndex);
-                            }
-                            closeInteractionCount++;
-                        }
-                    }
-                }
-            }
-            farForces[currentFarAttractedIndex] = farForce;
-        }
-    }
-
-    applicator.applyFarForces = function() {
-        for(var i=0, len=attractedCelestials.length; i<len; i++) {
-            attractedCelestials[i].force.add(farForces[i]);
-        }
-    }
-
-
-    applicator.updateForces = function(bodyCountToUpdateFarForcesFor) {
-        applicator.handleCloseInteractions();
-        applicator.handleFarInteractions(bodyCountToUpdateFarForcesFor);
-        applicator.applyFarForces();
-        applicator.closeInteractionCount = closeInteractionCount;
+    applicator.updateForces = function(bodyCountToUpdatePairForcesFor) {
+        applicator.handleBlackHoles();
+        applicator.handlePairForces(bodyCountToUpdatePairForcesFor);
+        applicator.applyPairForces();
     };
     return applicator;
 }
@@ -331,6 +197,9 @@ fullofstars.createGravitySystem = function(particleCount, typicalMass, numBlackH
             var pX = dist * Math.random() * 4 - dist * 2;
             var pY = (dist * Math.random() * 2 - dist);
             var pZ = dist * Math.random() * 4 - dist * 2;
+            // var pX = 0;
+            // var pY = 0;
+            // var pZ = 0;
 
             var vel = new THREE.Vector3(pX, pY, pZ);
             vel.normalize();
@@ -338,6 +207,7 @@ fullofstars.createGravitySystem = function(particleCount, typicalMass, numBlackH
             var xVel = vel.z * requiredSpeed;
             var yVel = vel.y * requiredSpeed;
             var zVel = -vel.x * requiredSpeed;
+
             var body = new PointMassBody(mass, new THREE.Vector3(pX, pY, pZ), new THREE.Vector3(xVel, yVel, zVel));
 
           }
@@ -346,7 +216,7 @@ fullofstars.createGravitySystem = function(particleCount, typicalMass, numBlackH
 
             var closest_bh = Math.floor(Math.random() * (numBlackHole));
             var bh_pos = bodies[closest_bh].position;
-            var dist = side * 0.8 * Math.random();
+            var dist = side * 0.4 * Math.random();
             var pX = dist * Math.random() * 2 - dist + bh_pos.x;
             var pY = (dist * Math.random() * 2 - dist)/2 + bh_pos.y;
             var pZ = dist * Math.random() * 2 - dist + bh_pos.z;
@@ -365,7 +235,7 @@ fullofstars.createGravitySystem = function(particleCount, typicalMass, numBlackH
 
           var closest_bh = Math.floor(Math.random() * (blackholepos.length));
           var bh_pos = blackholepos[closest_bh];
-          var dist = side * 0.8 * Math.random();
+          var dist = side * 0.5 * Math.random();
           var pX = dist * Math.random() * 2 - dist + bh_pos.x;
           var pY = (dist * Math.random() * 2 - dist)/2 + bh_pos.y;
           var pZ = dist * Math.random() * 2 - dist + bh_pos.z;

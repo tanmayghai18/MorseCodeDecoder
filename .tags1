@@ -6,24 +6,21 @@
 !_TAG_PROGRAM_VERSION	5.8	//
 PointMassBody	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^function PointMassBody(mass, position, velocity) {$/;"	function	line:7
 PointMassBody	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^function PointMassBody(mass, position, velocity) {$/;"	class	line:7
-updateAndResetForce	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^PointMassBody.prototype.updateAndResetForce = function(dt) {$/;"	function	line:20
-PointMassBody.updateAndResetForce	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^PointMassBody.prototype.updateAndResetForce = function(dt) {$/;"	method	line:20
-verletPositionStep	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^PointMassBody.verletPositionStep = function(bodies, dt) {$/;"	function	line:32
-PointMassBody.verletPositionStep	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^};$/;"	function	line:30
-verletAccelerationStep	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^PointMassBody.verletAccelerationStep = function(bodies, dt) {$/;"	function	line:62
-PointMassBody.verletAccelerationStep	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^};$/;"	function	line:60
-velocityVerletUpdate	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^PointMassBody.velocityVerletUpdate = function(bodies, dt, isPositionStep) {$/;"	function	line:85
-PointMassBody.velocityVerletUpdate	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^};$/;"	function	line:82
-createTwoTierSmartGravityApplicator	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^fullofstars.createTwoTierSmartGravityApplicator = function(attractedCelestials, attractingCelestials) {$/;"	function	line:94
-fullofstars.createTwoTierSmartGravityApplicator.applicator.closeInteractionCount	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    var applicator = {closeInteractionCount: 0};$/;"	property	line:95
-handleCloseInteractions	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    applicator.handleCloseInteractions = function() {$/;"	function	line:108
-applicator.handleCloseInteractions	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    var GAS_INTERACTION_DISTANCE_SQRD = Math.pow(30 * fullofstars.UNIVERSE_SCALE_RECIPROCAL, 2);$/;"	function	line:106
-fullofstars.createTwoTierSmartGravityApplicator	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^};$/;"	function	line:91
-handleFarInteractions	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    applicator.handleFarInteractions = function(bodyCountToUpdateFarForcesFor) {$/;"	function	line:203
-applicator.handleFarInteractions	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    };$/;"	function	line:201
-applyFarForces	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    applicator.applyFarForces = function() {$/;"	function	line:297
-applicator.applyFarForces	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    }$/;"	function	line:295
-updateForces	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    applicator.updateForces = function(bodyCountToUpdateFarForcesFor) {$/;"	function	line:304
-applicator.updateForces	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    }$/;"	function	line:301
-createGravitySystem	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^fullofstars.createGravitySystem = function(particleCount, typicalMass, numBlackHole, blackholepos) {$/;"	function	line:316
-fullofstars.createGravitySystem	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^}$/;"	function	line:311
+verletPositionStep	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^PointMassBody.verletPositionStep = function(bodies, dt) {$/;"	function	line:17
+PointMassBody.verletPositionStep	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^PointMassBody.prototype = Object.create(Object.prototype);$/;"	function	line:15
+verletAccelerationStep	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^PointMassBody.verletAccelerationStep = function(bodies, dt) {$/;"	function	line:45
+PointMassBody.verletAccelerationStep	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^};$/;"	function	line:43
+velocityVerletUpdate	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^PointMassBody.velocityVerletUpdate = function(bodies, dt, isPositionStep) {$/;"	function	line:66
+PointMassBody.velocityVerletUpdate	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^};$/;"	function	line:63
+createTwoTierSmartGravityApplicator	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^fullofstars.createTwoTierSmartGravityApplicator = function(attractedCelestials, attractingCelestials) {$/;"	function	line:75
+applyPairForces	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    applicator.applyPairForces = function() {$/;"	function	line:84
+applicator.applyPairForces	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    var currentFarAttractedIndex = 0;$/;"	function	line:81
+handleBlackHoles	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    applicator.handleBlackHoles = function() {$/;"	function	line:91
+applicator.handleBlackHoles	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    }$/;"	function	line:88
+handlePairForces	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    applicator.handlePairForces = function(bodyCountToUpdatePairForcesFor){$/;"	function	line:130
+applicator.handlePairForces	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    };$/;"	function	line:128
+updateForces	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    applicator.updateForces = function(bodyCountToUpdatePairForcesFor) {$/;"	function	line:171
+applicator.updateForces	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^    };$/;"	function	line:169
+fullofstars.createTwoTierSmartGravityApplicator	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^};$/;"	function	line:72
+createGravitySystem	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^fullofstars.createGravitySystem = function(particleCount, typicalMass, numBlackHole, blackholepos) {$/;"	function	line:182
+fullofstars.createGravitySystem	/Users/aakash/Documents/184/184FinalProj/gravity.js	/^}$/;"	function	line:177
