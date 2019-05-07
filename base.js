@@ -14,6 +14,12 @@ fullofstars.GRAVITATIONAL_CONSTANT = 6.673e-11;
 fullofstars.GRAVITY_EPSILON = 3*Math.pow(10, 19);
 fullofstars.TYPICAL_STAR_MASS = 2 * Math.pow(10, 30);
 
+//system parameters:
+fullofstars.NUMBLACKHOLES = 1; //default : 1
+fullofstars.BODYCOUNT = 500; // default: 500
+fullofstars.BODYCOUNT_VFX = 20000; // default: 20000
+fullofstars.BODYCOUNT_GAS = 300; //default: 300
+
 
 Number.prototype.mod = function(n) {
     return ((this%n)+n)%n;
