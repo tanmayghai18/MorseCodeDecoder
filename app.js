@@ -71,6 +71,14 @@ window.fullofstars = window.fullofstars || {};
     }
 
 
+    // function updateDebugPanel(heavyBodiesApplicator, vfxBodies, gasBodies) {
+    //     var dp = $("#debug_panel");
+
+    //     dp.find(".heavy-bodies .close-interactions .value").text(formatScientificNotationFixedWidth(heavyBodiesApplicator.closeInteractionCount, 4, 2));
+    //     dp.find(".particles .close-interactions .value").text(formatScientificNotationFixedWidth(heavyBodiesApplicator.closeInteractionCount, 4, 2));
+    // }
+
+
 
 
 
@@ -132,8 +140,6 @@ window.fullofstars = window.fullofstars || {};
 
 
     $(function() {
-
-
         var renderer = new THREE.WebGLRenderer({antialias: false});
         renderer.setSize( 300, 200 );
         // renderer.setPixelRatio( window.devicePixelRatio ); // adapt to retina display (runs slower)
@@ -142,6 +148,8 @@ window.fullofstars = window.fullofstars || {};
         renderer.sortObjects = false;
         document.body.appendChild(renderer.domElement);
         var scene = new THREE.Scene();
+
+
 
         var camera = new THREE.PerspectiveCamera(
             45,         // Field of view
@@ -155,7 +163,6 @@ window.fullofstars = window.fullofstars || {};
 
         controls.minDistance = 200;
         controls.maxDistance = 5000;
-
         var skybox = createSkyboxStuff();
         fullofstars.updateViewport(window, renderer, camera, skybox);
         window.addEventListener('resize', function() {fullofstars.updateViewport(window, renderer, camera, skybox)});
@@ -165,7 +172,7 @@ window.fullofstars = window.fullofstars || {};
 
         var FAR_UPDATE_PERIOD = 2.0; // How long between updates of far interactions
         var FAR_BODYCOUNT_PER_60FPS_FRAME = Math.max(1, Math.ceil(fullofstars.BODYCOUNT / (120*FAR_UPDATE_PERIOD)));
-        console.log("FAR_BODYCOUNT_PER_60FPS_FRAME", FAR_BODYCOUNT_PER_60FPS_FRAME);
+        // console.log("FAR_BODYCOUNT_PER_60FPS_FRAME", FAR_BODYCOUNT_PER_60FPS_FRAME);
 
         var blackholearray =[]
         var bodies = fullofstars.createGravitySystem(fullofstars.BODYCOUNT, fullofstars.TYPICAL_STAR_MASS, fullofstars.NUMBLACKHOLES, blackholearray);
@@ -260,6 +267,19 @@ window.fullofstars = window.fullofstars || {};
             }
         };
 
+        function displayGUI() { 
+            var testParameters = function() {
+            this.numblackholes = fullofstars.NUMBLACKHOLES;
+            this.bodycount = fullofstars.BODYCOUNT;
+            };
+
+            console.log("displaying the dat.gui GUI");
+            var text = new testParameters();
+            var gui = new dat.GUI();
+            gui.add(text, 'numblackholes', fullofstars.NUMBLACKHOLES, 10*fullofstars.NUMBLACKHOLES);
+            gui.add(text, 'bodycount', fullofstars.BODYCOUNT, 2*fullofstars.BODYCOUNT);
+        }
+
 
         function startGalaxySimulation() {
             function update(t) {
@@ -330,6 +350,7 @@ window.fullofstars = window.fullofstars || {};
                 render();
                 window.requestAnimationFrame(handleAnimationFrame);
             };
+            displayGUI();
             window.requestAnimationFrame(handleAnimationFrame);
 
         };
