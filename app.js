@@ -268,6 +268,7 @@ var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg',
                 galaxysim.NUMBLACKHOLES = value;
                 if (galaxysim.NUMBLACKHOLES != numblackholes.initialValue) {
                     render_all(urls);
+                    gui.destroy();
                 }
             });
 
@@ -275,6 +276,7 @@ var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg',
                 urls = value.split(",");
                 if (urls != backgrounds.initialValue) {
                     render_all(urls);
+                    gui.hide();
                 }
             });
 
