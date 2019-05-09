@@ -134,10 +134,12 @@ var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg',
         );
 
         var controls = new THREE.OrbitControls( camera, renderer.domElement );
-        controls.screenSpacePanning = false;
 
         controls.minDistance = 300;
         controls.maxDistance = 7000;
+
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 0.2;
 
         camera.position.set(2870, 1070, -275);
 
@@ -188,8 +190,10 @@ var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg',
         var PAUSED = false;
 
         $("body").on("keypress", function(e) {
-            if(_.contains([32], e.which)) {
+            if (_.contains([32], e.which)) {
                 PAUSED = !PAUSED;
+            } else if (_.contains([114], e.which)) {
+                controls.autoRotate = !controls.autoRotate;
             }
             else if(_.contains([49], e.which)) {
                 makeCameraTransition(function() {
