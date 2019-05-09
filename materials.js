@@ -1,6 +1,4 @@
-window.fullofstars = window.fullofstars || {};
-
-fullofstars.createAllMaterials = function() {
+galaxysim.createAllMaterials = function() {
 
     function createParticleMaterial(texture, size, color, blending, opacity) {
     	return new THREE.PointCloudMaterial({

@@ -1,8 +1,6 @@
 (function() {
 
-window.fullofstars = window.fullofstars || {};
-
-window.fullofstars.PointMassBody = PointMassBody;
+window.galaxysim.PointMassBody = PointMassBody;
 
 function PointMassBody(mass, position, velocity) {
     this.mass = mass;
@@ -72,7 +70,7 @@ PointMassBody.velocityVerletUpdate = function(bodies, dt, isPositionStep) {
 };
 
 
-fullofstars.createTwoTierSmartGravityApplicator = function(attractedCelestials, attractingCelestials) {
+galaxysim.createTwoTierSmartGravityApplicator = function(attractedCelestials, attractingCelestials) {
     var applicator = {};
     var attractingIsAttracted = attractingCelestials === attractedCelestials;
 
@@ -90,10 +88,10 @@ fullofstars.createTwoTierSmartGravityApplicator = function(attractedCelestials, 
 
     applicator.handleBlackHoles = function() {
       // Highly inlined for performance
-      var typicalStarMass = fullofstars.TYPICAL_STAR_MASS;
-      var universeScaleRecipr = fullofstars.UNIVERSE_SCALE_RECIPROCAL;
-      var gravitationalConstant = fullofstars.GRAVITATIONAL_CONSTANT;
-      var gravityEpsilon = fullofstars.GRAVITY_EPSILON;
+      var typicalStarMass = galaxysim.TYPICAL_STAR_MASS;
+      var universeScaleRecipr = galaxysim.UNIVERSE_SCALE_RECIPROCAL;
+      var gravitationalConstant = galaxysim.GRAVITATIONAL_CONSTANT;
+      var gravityEpsilon = galaxysim.GRAVITY_EPSILON;
       var gravityEpsilonSqrd = gravityEpsilon*gravityEpsilon;
 
 
@@ -101,7 +99,7 @@ fullofstars.createTwoTierSmartGravityApplicator = function(attractedCelestials, 
       var temp_force = new THREE.Vector3(0,0,0); // To avoid allocations during updates
       var DARK_FORCE_COEFFICIENT = 4*Math.pow(10, -20) * gravitationalConstant;
       for (var i = 0, len=attractedCelestials.length; i<len; i ++ ){ // iterate through all bodies
-        for (var j = 0; j < fullofstars.NUMBLACKHOLES; j ++ ){ //iterate through all blackholes
+        for (var j = 0; j < galaxysim.NUMBLACKHOLES; j ++ ){ //iterate through all blackholes
           if (attractingIsAttracted && i == j){ //skip if bodies, bodies interaction and objects are the same
             continue;
           }
@@ -114,7 +112,7 @@ fullofstars.createTwoTierSmartGravityApplicator = function(attractedCelestials, 
 
           var sqrDist = body1pos.distanceToSquared(body2pos) * universeScaleRecipr * universeScaleRecipr;
           var dist =  Math.sqrt(sqrDist);
-          force = fullofstars.GRAVITATIONAL_CONSTANT * body1.mass * body2.mass / Math.pow(sqrDist + gravityEpsilonSqrd, 3/2);
+          force = galaxysim.GRAVITATIONAL_CONSTANT * body1.mass * body2.mass / Math.pow(sqrDist + gravityEpsilonSqrd, 3/2);
 
           // var darkForce = DARK_FORCE_COEFFICIENT * gravitationalConstant
           force += DARK_FORCE_COEFFICIENT * (body1.mass * body2.mass / dist);
@@ -128,10 +126,10 @@ fullofstars.createTwoTierSmartGravityApplicator = function(attractedCelestials, 
     };
 
     applicator.handlePairForces = function(bodyCountToUpdatePairForcesFor){
-      var typicalStarMass = fullofstars.TYPICAL_STAR_MASS;
-      var universeScaleRecipr = fullofstars.UNIVERSE_SCALE_RECIPROCAL;
-      var gravitationalConstant = fullofstars.GRAVITATIONAL_CONSTANT;
-      var gravityEpsilon = fullofstars.GRAVITY_EPSILON;
+      var typicalStarMass = galaxysim.TYPICAL_STAR_MASS;
+      var universeScaleRecipr = galaxysim.UNIVERSE_SCALE_RECIPROCAL;
+      var gravitationalConstant = galaxysim.GRAVITATIONAL_CONSTANT;
+      var gravityEpsilon = galaxysim.GRAVITY_EPSILON;
       var gravityEpsilonSqrd = gravityEpsilon*gravityEpsilon;
 
       var body1To2X = 0.0, body1To2Y = 0.0; body1To2Z = 0.0;
@@ -151,7 +149,7 @@ fullofstars.createTwoTierSmartGravityApplicator = function(attractedCelestials, 
           farForce.set(0,0,0);
           var attractedBody = attractedCelestials[currentFarAttractedIndex];
 
-          for(var j=fullofstars.NUMBLACKHOLES; j<fullofstars.BODYCOUNT; j++) {
+          for(var j=galaxysim.NUMBLACKHOLES; j<galaxysim.BODYCOUNT; j++) {
               if(attractingIsAttracted && j == currentFarAttractedIndex) {
                 continue;
               }
@@ -159,7 +157,7 @@ fullofstars.createTwoTierSmartGravityApplicator = function(attractedCelestials, 
               var body2 = attractingCelestials[j];
 
               var sqrDist = body1.position.distanceToSquared(body2.position) * universeScaleRecipr * universeScaleRecipr;
-              force = fullofstars.GRAVITATIONAL_CONSTANT * body1.mass * body2.mass / Math.pow(sqrDist + gravityEpsilonSqrd, 3/2);
+              force = galaxysim.GRAVITATIONAL_CONSTANT * body1.mass * body2.mass / Math.pow(sqrDist + gravityEpsilonSqrd, 3/2);
               temp_force.subVectors(body2.position, body1.position).normalize().multiplyScalar(force);
               farForce.add(temp_force);
 
@@ -179,14 +177,14 @@ fullofstars.createTwoTierSmartGravityApplicator = function(attractedCelestials, 
 
 
 
-fullofstars.createGravitySystem = function(particleCount, typicalMass, numblackholes, blackholepos) {
+galaxysim.createGravitySystem = function(particleCount, typicalMass, numblackholes, blackholepos) {
     var bodies = [];
 
-    var typicalStarSpeed = 0.8 * 7*Math.pow(10, 10) * fullofstars.UNIVERSE_SCALE;
+    var typicalStarSpeed = 0.8 * 7*Math.pow(10, 10) * galaxysim.UNIVERSE_SCALE;
     console.log("typical star speed", typicalStarSpeed);
     var side = 4300.0;
 
-    var BLACK_HOLE_MASS = fullofstars.TYPICAL_STAR_MASS * 7000;
+    var BLACK_HOLE_MASS = galaxysim.TYPICAL_STAR_MASS * 7000;
 
     for (var p = 0; p < particleCount; p++) {
         var angle = Math.PI * 2 * Math.random();
@@ -221,10 +219,10 @@ fullofstars.createGravitySystem = function(particleCount, typicalMass, numblackh
           var pY = (Math.random() - 0.5) * (side - dist) * 0.7;
           var pZ = dist * Math.sin(angle);
           if (numblackholes > 0){
-            var closest_bh = Math.floor(Math.random() * (fullofstars.NUMBLACKHOLES));
+            var closest_bh = Math.floor(Math.random() * (galaxysim.NUMBLACKHOLES));
             var bh_pos = bodies[closest_bh].position;
           } else{
-            var closest_bh = Math.floor(Math.random() * (fullofstars.NUMBLACKHOLES));
+            var closest_bh = Math.floor(Math.random() * (galaxysim.NUMBLACKHOLES));
             var bh_pos = blackholepos[closest_bh];
           }
 

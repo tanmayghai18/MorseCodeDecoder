@@ -1,6 +1,4 @@
-window.fullofstars = window.fullofstars || {};
-
-var urls = ['GalaxyTex_PositiveX.jpg', 'GalaxyTex_NegativeX.jpg', 'GalaxyTex_PositiveY.jpg', 'GalaxyTex_NegativeY.jpg', 'GalaxyTex_PositiveZ.jpg', 'GalaxyTex_NegativeZ.jpg',];
+var milky_way = ['GalaxyTex_PositiveX.jpg', 'GalaxyTex_NegativeX.jpg', 'GalaxyTex_PositiveY.jpg', 'GalaxyTex_NegativeY.jpg', 'GalaxyTex_PositiveZ.jpg', 'GalaxyTex_NegativeZ.jpg',];
 
 var light_blue = ['BlueNebular_left.jpg', 'BlueNebular_right.jpg', 'BlueNebular_top.jpg', 'BlueNebular_bottom.jpg', 'BlueNebular_front.jpg', 'BlueNebular_back.jpg',];
 
@@ -10,7 +8,7 @@ var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg',
 
 (function() {
 
-    fullofstars.updateViewport = function(window, renderer, camera, skybox) {
+    galaxysim.updateViewport = function(window, renderer, camera, skybox) {
         var w = window.innerWidth;
         var h = window.innerHeight;
         renderer.setSize(w, h);
@@ -43,7 +41,7 @@ var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg',
 
         for (var p = 0; p < particleCount; p++) {
             particle = bodies[p].position;
-            var massFactor = bodies[p].mass / fullofstars.TYPICAL_STAR_MASS;
+            var massFactor = bodies[p].mass / galaxysim.TYPICAL_STAR_MASS;
 
             colorSelectingFunc(bodies[p], pointCloud.geometry.colors[p]);
         }
@@ -51,12 +49,12 @@ var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg',
     }
 
     function colorStar(body, existingColor) {
-        if(body.mass > 0.9999*fullofstars.TYPICAL_STAR_MASS * 100) {
+        if(body.mass > 0.9999*galaxysim.TYPICAL_STAR_MASS * 100) {
             // Black hole color
             color = new THREE.Color(0,0,0); }
         else {
             // Normal color
-            var massFactor = body.mass / fullofstars.TYPICAL_STAR_MASS;
+            var massFactor = body.mass / galaxysim.TYPICAL_STAR_MASS;
 
             if(massFactor < 0.002) {
                 existingColor.setRGB(0.9+0.1*Math.random(), 0.4 + 0.4*Math.random(), 0.4 + 0.4 * Math.random());
@@ -70,7 +68,7 @@ var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg',
     }
 
     function colorGasCloud(body, existingColor) {
-        var massFactor = body.mass / fullofstars.TYPICAL_STAR_MASS;
+        var massFactor = body.mass / galaxysim.TYPICAL_STAR_MASS;
         existingColor.setHSL(0.665 + Math.random() * 0.335, 0.9, 0.5 + 0.5*Math.random());
     }
 
@@ -131,8 +129,8 @@ var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg',
         var camera = new THREE.PerspectiveCamera(
             45,         // Field of view
             1200 / 800,  // Aspect ratio
-            .0001 * fullofstars.MILKY_WAY_DIAMETER * fullofstars.UNIVERSE_SCALE,         // Near
-            20 * fullofstars.MILKY_WAY_DIAMETER * fullofstars.UNIVERSE_SCALE       // Far
+            .0001 * galaxysim.MILKY_WAY_DIAMETER * galaxysim.UNIVERSE_SCALE,         // Near
+            20 * galaxysim.MILKY_WAY_DIAMETER * galaxysim.UNIVERSE_SCALE       // Far
         );
 
         var controls = new THREE.OrbitControls( camera, renderer.domElement );
@@ -144,23 +142,23 @@ var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg',
         camera.position.set(2870, 1070, -275);
 
         var skybox = createSkyboxStuff(urls);
-        fullofstars.updateViewport(window, renderer, camera, skybox);
-        window.addEventListener('resize', function() {fullofstars.updateViewport(window, renderer, camera, skybox)});
+        galaxysim.updateViewport(window, renderer, camera, skybox);
+        window.addEventListener('resize', function() {galaxysim.updateViewport(window, renderer, camera, skybox)});
 
 
-        var materials = fullofstars.createAllMaterials();
+        var materials = galaxysim.createAllMaterials();
 
         var FAR_UPDATE_PERIOD = 2.0; // How long between updates of far interactions
-        var FAR_BODYCOUNT_PER_60FPS_FRAME = Math.max(1, Math.ceil(fullofstars.BODYCOUNT / (120*FAR_UPDATE_PERIOD)));
+        var FAR_BODYCOUNT_PER_60FPS_FRAME = Math.max(1, Math.ceil(galaxysim.BODYCOUNT / (120*FAR_UPDATE_PERIOD)));
         // console.log("FAR_BODYCOUNT_PER_60FPS_FRAME", FAR_BODYCOUNT_PER_60FPS_FRAME);
 
         var blackholearray =[]
-        var bodies = fullofstars.createGravitySystem(fullofstars.BODYCOUNT, fullofstars.TYPICAL_STAR_MASS, fullofstars.NUMBLACKHOLES, blackholearray);
-        for (var i = 0; i < fullofstars.NUMBLACKHOLES; i ++ ){
+        var bodies = galaxysim.createGravitySystem(galaxysim.BODYCOUNT, galaxysim.TYPICAL_STAR_MASS, galaxysim.NUMBLACKHOLES, blackholearray);
+        for (var i = 0; i < galaxysim.NUMBLACKHOLES; i ++ ){
           blackholearray.push(bodies[i].position)
         }
-        var bodiesVfx = fullofstars.createGravitySystem(fullofstars.BODYCOUNT_VFX, 0.3*fullofstars.TYPICAL_STAR_MASS, 0, blackholearray);
-        var bodiesGas = fullofstars.createGravitySystem(fullofstars.BODYCOUNT_GAS, 0.2*fullofstars.TYPICAL_STAR_MASS, 0, blackholearray);
+        var bodiesVfx = galaxysim.createGravitySystem(galaxysim.BODYCOUNT_VFX, 0.3*galaxysim.TYPICAL_STAR_MASS, 0, blackholearray);
+        var bodiesGas = galaxysim.createGravitySystem(galaxysim.BODYCOUNT_GAS, 0.2*galaxysim.TYPICAL_STAR_MASS, 0, blackholearray);
 
 
         var mesh = new THREE.PointCloud( createCloudGeometryFromBodies(bodies), materials.bright );
@@ -224,9 +222,9 @@ var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg',
         var accumulatedFarDt = 0.0;
         var update_counter = 0;
         var accumulatedRealDtTotal = 0.0;
-        var gravityApplicator = fullofstars.createTwoTierSmartGravityApplicator(bodies, bodies);
-        var gravityApplicatorVfx = fullofstars.createTwoTierSmartGravityApplicator(bodiesVfx, bodies);
-        var gravityApplicatorGas = fullofstars.createTwoTierSmartGravityApplicator(bodiesGas, bodies);
+        var gravityApplicator = galaxysim.createTwoTierSmartGravityApplicator(bodies, bodies);
+        var gravityApplicatorVfx = galaxysim.createTwoTierSmartGravityApplicator(bodiesVfx, bodies);
+        var gravityApplicatorGas = galaxysim.createTwoTierSmartGravityApplicator(bodiesGas, bodies);
         gravityApplicator.updateForces(bodies.length);
         gravityApplicatorVfx.updateForces(bodiesVfx.length);
         gravityApplicatorGas.updateForces(bodiesGas.length);
@@ -251,36 +249,29 @@ var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg',
 
         function displayGUI() {
             var testParameters = function() {
-                this.numblackholes = fullofstars.NUMBLACKHOLES;
-                this.backgrounds = urls;
+                this.numblackholes = galaxysim.NUMBLACKHOLES;
+                this.backgrounds = milky_way;
             };
 
             console.log("displaying the dat.gui GUI");
             var text = new testParameters();
             var gui = new dat.GUI();
-            var numblackholes = gui.add(text, 'numblackholes').min(fullofstars.NUMBLACKHOLES).max(5*fullofstars.NUMBLACKHOLES).step(1).listen();
-            var backgrounds = gui.add(text, 'backgrounds', {urls, light_blue, blue, red});
+            var numblackholes = gui.add(text, 'numblackholes').min(galaxysim.NUMBLACKHOLES).max(5*galaxysim.NUMBLACKHOLES).step(1).listen();
+            var backgrounds = gui.add(text, 'backgrounds', {milky_way, light_blue, blue, red});
 
             numblackholes.onFinishChange(function(value) {
-           
-                numblackholes.initialValue = fullofstars.NUMBLACKHOLES;
-                fullofstars.NUMBLACKHOLES = value;
-                console.log(fullofstars.NUMBLACKHOLES);
-                if (fullofstars.NUMBLACKHOLES != numblackholes.initialValue) {
+                numblackholes.initialValue = galaxysim.NUMBLACKHOLES;
+                galaxysim.NUMBLACKHOLES = value;
+                if (galaxysim.NUMBLACKHOLES != numblackholes.initialValue) {
                     render_all(urls);
                 }
-
-
             });
 
             backgrounds.onFinishChange(function(value) {
                 urls = value.split(",");
-                console.log("HERE");
-                console.log(urls);
                 if (urls != backgrounds.initialValue) {
                     render_all(urls);
                 }
-
             });
 
         }
@@ -301,7 +292,7 @@ var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg',
                 dt = Math.min(1 / 60.0, dt); // Clamp
                 accumulatedRealDtTotal += dt;
 
-                var positionScale = 1.5 * fullofstars.MILKY_WAY_DIAMETER * fullofstars.UNIVERSE_SCALE;
+                var positionScale = 1.5 * galaxysim.MILKY_WAY_DIAMETER * galaxysim.UNIVERSE_SCALE;
 
                 if (cameraMode === CAMERA_MODES.ORBIT) {
                     var cameraRotationSpeed = 0.01; // default: 0.03
@@ -324,9 +315,9 @@ var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg',
                 accumulatedFarDt += dt;
 
                 // This step updates positions
-                fullofstars.PointMassBody.velocityVerletUpdate(bodies, dt, true);
-                fullofstars.PointMassBody.velocityVerletUpdate(bodiesVfx, dt, true);
-                fullofstars.PointMassBody.velocityVerletUpdate(bodiesGas, dt, true);
+                galaxysim.PointMassBody.velocityVerletUpdate(bodies, dt, true);
+                galaxysim.PointMassBody.velocityVerletUpdate(bodiesVfx, dt, true);
+                galaxysim.PointMassBody.velocityVerletUpdate(bodiesGas, dt, true);
 
                 for(var i=0, len=bodies.length; i<len; i++) {
                     mesh.geometry.vertices[i].copy(bodies[i].position);
@@ -349,9 +340,9 @@ var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg',
                     update_counter = (update_counter + 1) % 100;
                 }
 
-                if (update_counter === 0 && fullofstars.G_SCALE < 2.0) {
-                    fullofstars.GRAVITATIONAL_CONSTANT = fullofstars.G_SCALE * fullofstars.G;
-                    fullofstars.G_SCALE += 0.05;
+                if (update_counter === 0 && galaxysim.G_SCALE < 2.0) {
+                    galaxysim.GRAVITATIONAL_CONSTANT = galaxysim.G_SCALE * galaxysim.G;
+                    galaxysim.G_SCALE += 0.05;
                     mesh.material.opacity += 0.03;
                     meshVfx.material.opacity += 0.03;
 
@@ -363,9 +354,9 @@ var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg',
                     flattenToDisk(bodiesGas);
                 }
 
-                fullofstars.PointMassBody.velocityVerletUpdate(bodies, dt, false);
-                fullofstars.PointMassBody.velocityVerletUpdate(bodiesVfx, dt, false);
-                fullofstars.PointMassBody.velocityVerletUpdate(bodiesGas, dt, false);
+                galaxysim.PointMassBody.velocityVerletUpdate(bodies, dt, false);
+                galaxysim.PointMassBody.velocityVerletUpdate(bodiesVfx, dt, false);
+                galaxysim.PointMassBody.velocityVerletUpdate(bodiesGas, dt, false);
 
                 mesh.geometry.verticesNeedUpdate = true;
                 meshVfx.geometry.verticesNeedUpdate = true;
@@ -389,6 +380,6 @@ var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg',
     };
 
     $(document).ready(function() {
-        render_all(urls);
+        render_all(milky_way);
     });
 })();
