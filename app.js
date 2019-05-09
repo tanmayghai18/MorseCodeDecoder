@@ -1,22 +1,8 @@
 window.fullofstars = window.fullofstars || {};
 
-var urls = [
-            'GalaxyTex_PositiveX.jpg',
-            'GalaxyTex_NegativeX.jpg',
-            'GalaxyTex_PositiveY.jpg',
-            'GalaxyTex_NegativeY.jpg',
-            'GalaxyTex_PositiveZ.jpg',
-            'GalaxyTex_NegativeZ.jpg',
-        ];
+var urls = ['GalaxyTex_PositiveX.jpg', 'GalaxyTex_NegativeX.jpg', 'GalaxyTex_PositiveY.jpg', 'GalaxyTex_NegativeY.jpg', 'GalaxyTex_PositiveZ.jpg', 'GalaxyTex_NegativeZ.jpg',];
 
-var light_blue = [
-            'BlueNebular_left.jpg', 
-            'BlueNebular_right.jpg', 
-            'BlueNebular_top.jpg', 
-            'BlueNebular_bottom.jpg',
-            'BlueNebular_front.jpg',
-            'BlueNebular_back.jpg',
-        ];
+var light_blue = ['BlueNebular_left.jpg', 'BlueNebular_right.jpg', 'BlueNebular_top.jpg', 'BlueNebular_bottom.jpg', 'BlueNebular_front.jpg', 'BlueNebular_back.jpg',];
 
 var blue = ['bkg1_left.jpg', 'bkg1_right.jpg', 'bkg1_top.jpg', 'bkg1_bottom.jpg', 'bkg1_front.jpg','bkg1_back.jpg',];
 var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg', 'bkg2_front.jpg', 'bkg2_back.jpg',];
@@ -272,7 +258,7 @@ var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg',
             console.log("displaying the dat.gui GUI");
             var text = new testParameters();
             var gui = new dat.GUI();
-            var numblackholes = gui.add(text, 'numblackholes').min(fullofstars.NUMBLACKHOLES).max(10*fullofstars.NUMBLACKHOLES).step(1).listen();
+            var numblackholes = gui.add(text, 'numblackholes').min(fullofstars.NUMBLACKHOLES).max(5*fullofstars.NUMBLACKHOLES).step(1).listen();
             var backgrounds = gui.add(text, 'backgrounds', {urls, light_blue, blue, red});
 
             numblackholes.onFinishChange(function(value) {
@@ -280,7 +266,10 @@ var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg',
                 numblackholes.initialValue = fullofstars.NUMBLACKHOLES;
                 fullofstars.NUMBLACKHOLES = value;
                 console.log(fullofstars.NUMBLACKHOLES);
-                render_all(urls);
+                if (fullofstars.NUMBLACKHOLES != numblackholes.initialValue) {
+                    render_all(urls);
+                }
+
 
             });
 
@@ -288,7 +277,9 @@ var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg',
                 urls = value.split(",");
                 console.log("HERE");
                 console.log(urls);
-                render_all(urls);
+                if (urls != backgrounds.initialValue) {
+                    render_all(urls);
+                }
 
             });
 
