@@ -104,6 +104,8 @@ var globalBackground = galaxysim.milky_way;
         );
         skyboxScene.add(skybox);
 
+        galaxysim.skyBoxMaterial = skyBoxMaterial;
+
         return { scene: skyboxScene, camera: skyboxCamera };
     }
 
@@ -362,10 +364,10 @@ var globalBackground = galaxysim.milky_way;
                 .max(5*galaxysim.NUMBLACKHOLES)
                 .step(1).listen();
             var backgrounds = f2.add(text, 'backgrounds', {
-                'Milky Way': galaxysim.milky_way,
-                'Light Blue': galaxysim.light_blue,
-                'Blue': galaxysim.blue,
-                'Red': galaxysim.red,
+                'Milky Way': 0,
+                'Light Blue': 1,
+                'Blue': 2,
+                'Red': 3,
             });
             var gravity_strength = f3.add(text, 'gravity_strength').min(0.1).max(100).step(0.1).listen();
             gui.remember(testParameters);
@@ -378,13 +380,10 @@ var globalBackground = galaxysim.milky_way;
                 }
             });
 
-            backgrounds.onFinishChange(function(value) {
-                if (typeof value === 'string') {
-                    globalBackground = value.split(",");
-                }  
-                if (globalBackground != backgrounds.initialValue) {
-                    render_all(globalBackground);
-                }
+            backgrounds.onFinishChange(function(index) {
+                galaxysim.skyBoxMaterial.uniforms['tCube'].value.dispose();
+                galaxysim.skyBoxMaterial.uniforms['tCube'].value = galaxysim.cubemaps[index];
+                galaxysim.skyBoxMaterial.uniformsNeedUpdate = true;
             });
 
             gravity_strength.onFinishChange(function(value) {

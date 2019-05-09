@@ -32,6 +32,9 @@ galaxysim.red = ['bkg2_left.jpg',
     'bkg2_back.jpg'
 ];
 
+galaxysim.cubemaps_list = [galaxysim.milky_way, galaxysim.light_blue, galaxysim.blue, galaxysim.red];
+galaxysim.cubemaps = [];
+
 galaxysim.createAllMaterials = function() {
 
     function createParticleMaterial(texture, size, color, blending, opacity) {
@@ -50,6 +53,14 @@ galaxysim.createAllMaterials = function() {
 	var starLargeTexture = THREE.ImageUtils.loadTexture("textures/star_large.png");
 	var starSmallTexture = THREE.ImageUtils.loadTexture("textures/star_small.png");
 	var gasCloudTexture = THREE.ImageUtils.loadTexture("textures/cloud.png");
+
+	for (var i=0; i < galaxysim.cubemaps_list.length; i++) {
+        var cubemap = new THREE.CubeTextureLoader()
+            .setPath(galaxysim.cubemap_path)
+            .load(galaxysim.cubemaps_list[i]);
+        cubemap.format = THREE.RGBFormat;
+		galaxysim.cubemaps.push(cubemap);
+	}
 
 	return {
 		bright: createParticleMaterial(starLargeTexture, 140, 0xffffff, THREE.AdditiveBlending, 0.0),
