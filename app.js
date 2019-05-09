@@ -383,7 +383,9 @@ var globalMesh;
             });
 
             backgrounds.onFinishChange(function(value) {
-                urls = value.split(",");
+                if (typeof value === 'string') {
+                    urls = value.split(",");
+                }   
                 if (urls != backgrounds.initialValue) {
                     render_all(urls);
                 }
