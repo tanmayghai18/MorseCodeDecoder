@@ -5,6 +5,7 @@ var light_blue = ['BlueNebular_left.jpg', 'BlueNebular_right.jpg', 'BlueNebular_
 var blue = ['bkg1_left.jpg', 'bkg1_right.jpg', 'bkg1_top.jpg', 'bkg1_bottom.jpg', 'bkg1_front.jpg','bkg1_back.jpg',];
 var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg', 'bkg2_front.jpg', 'bkg2_back.jpg',];
 
+var globalMesh;
 
 (function() {
 
@@ -359,13 +360,18 @@ var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg',
             var testParameters = function() {
                 this.numblackholes = galaxysim.NUMBLACKHOLES;
                 this.backgrounds = milky_way;
+                this.gravitational_constant_scale = 0.1;
             };
 
             console.log("displaying the dat.gui GUI");
             var text = new testParameters();
             var gui = new dat.GUI();
-            var numblackholes = gui.add(text, 'numblackholes').min(galaxysim.NUMBLACKHOLES).max(5*galaxysim.NUMBLACKHOLES).step(1).listen();
-            var backgrounds = gui.add(text, 'backgrounds', {milky_way, light_blue, blue, red});
+            var f1 = gui.addFolder('Blackholes');
+            var f2 = gui.addFolder('Backgrounds');
+            var f3 = gui.addFolder('Gravitational Constant');
+            var numblackholes = f1.add(text, 'numblackholes').min(galaxysim.NUMBLACKHOLES).max(5*galaxysim.NUMBLACKHOLES).step(1).listen();
+            var backgrounds = f2.add(text, 'backgrounds', {milky_way, light_blue, blue, red});
+            var gravitational_constant_scale = f3.add(text, 'gravitational_constant_scale').min(0.1).max(100).step(0.1).listen();
             gui.remember(testParameters);
 
             numblackholes.onFinishChange(function(value) {
@@ -380,6 +386,15 @@ var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg',
                 urls = value.split(",");
                 if (urls != backgrounds.initialValue) {
                     render_all(urls);
+                }
+            });
+
+            gravitational_constant_scale.onFinishChange(function(value) {
+                gravitational_constant_scale.initialValue = 0.1;
+                galaxysim.GRAVITATIONAL_CONSTANT = value * gravitational_constant_scale;
+                console.log(galaxysim.GRAVITATIONAL_CONSTANT);
+                if (galaxysim.GRAVITATIONAL_CONSTANT != gravitational_constant_scale.initialValue) {
+                    render_all(backgrounds);
                 }
             });
 
