@@ -368,8 +368,8 @@ var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg',
                 if (!PAUSED) {
                     update(dt);
                     controls.update();
-                    render();
                 }
+                render();
                 window.requestAnimationFrame(handleAnimationFrame);
             };
 
