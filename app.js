@@ -105,9 +105,9 @@ window.fullofstars = window.fullofstars || {};
 
         var skyboxScene = new THREE.Scene();
         var skyboxCamera = new THREE.PerspectiveCamera(
-            45, 
-            window.innerWidth / window.innerHeight, 
-            100, 
+            45,
+            window.innerWidth / window.innerHeight,
+            100,
             60000
         );
 
@@ -156,7 +156,7 @@ window.fullofstars = window.fullofstars || {};
             45,         // Field of view
             1200 / 800,  // Aspect ratio
             .0001 * fullofstars.MILKY_WAY_DIAMETER * fullofstars.UNIVERSE_SCALE,         // Near
-            10 * fullofstars.MILKY_WAY_DIAMETER * fullofstars.UNIVERSE_SCALE       // Far
+            20 * fullofstars.MILKY_WAY_DIAMETER * fullofstars.UNIVERSE_SCALE       // Far
         );
 
         var controls = new THREE.OrbitControls( camera, renderer.domElement );
@@ -178,9 +178,13 @@ window.fullofstars = window.fullofstars || {};
         var FAR_BODYCOUNT_PER_60FPS_FRAME = Math.max(1, Math.ceil(fullofstars.BODYCOUNT / (120*FAR_UPDATE_PERIOD)));
         // console.log("FAR_BODYCOUNT_PER_60FPS_FRAME", FAR_BODYCOUNT_PER_60FPS_FRAME);
 
-        var bodies = fullofstars.createGravitySystem(fullofstars.BODYCOUNT, fullofstars.TYPICAL_STAR_MASS, true);
-        var bodiesVfx = fullofstars.createGravitySystem(fullofstars.BODYCOUNT_VFX, 0.3*fullofstars.TYPICAL_STAR_MASS, true);
-        var bodiesGas = fullofstars.createGravitySystem(fullofstars.BODYCOUNT_GAS, 0.2*fullofstars.TYPICAL_STAR_MASS, true);
+        var blackholearray =[]
+        var bodies = fullofstars.createGravitySystem(fullofstars.BODYCOUNT, fullofstars.TYPICAL_STAR_MASS, fullofstars.NUMBLACKHOLES, blackholearray);
+        for (var i = 0; i < fullofstars.NUMBLACKHOLES; i ++ ){
+          blackholearray.push(bodies[i].position)
+        }
+        var bodiesVfx = fullofstars.createGravitySystem(fullofstars.BODYCOUNT_VFX, 0.3*fullofstars.TYPICAL_STAR_MASS, 0, blackholearray);
+        var bodiesGas = fullofstars.createGravitySystem(fullofstars.BODYCOUNT_GAS, 0.2*fullofstars.TYPICAL_STAR_MASS, 0, blackholearray);
 
 
         var mesh = new THREE.PointCloud( createCloudGeometryFromBodies(bodies), materials.bright );
@@ -269,7 +273,7 @@ window.fullofstars = window.fullofstars || {};
         };
 
 
-        function displayGUI() { 
+        function displayGUI() {
             var testParameters = function() {
                 this.numblackholes = fullofstars.NUMBLACKHOLES;
                 this.bodycount = fullofstars.BODYCOUNT;
@@ -284,9 +288,9 @@ window.fullofstars = window.fullofstars || {};
 
         function flattenToDisk(bodies) {
             for (var i=0; i < bodies.length; i++) {
-                if (Math.abs(bodies[i].position.y) > 100 && 
+                if (Math.abs(bodies[i].position.y) > 100 &&
                     (bodies[i].position.y > 0 && bodies[i].velocity.y > 0
-                    || bodies[i].position.y < 0 && bodies[i].velocity.y < 0)) 
+                    || bodies[i].position.y < 0 && bodies[i].velocity.y < 0))
                         bodies[i].velocity.y /= 2;
             }
         }
@@ -351,6 +355,7 @@ window.fullofstars = window.fullofstars || {};
                     fullofstars.G_SCALE += 0.05;
                     mesh.material.opacity += 0.03;
                     meshVfx.material.opacity += 0.03;
+
                 }
 
                 if (update_counter === 0) {

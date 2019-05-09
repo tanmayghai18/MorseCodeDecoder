@@ -179,7 +179,7 @@ fullofstars.createTwoTierSmartGravityApplicator = function(attractedCelestials, 
 
 
 
-fullofstars.createGravitySystem = function(particleCount, typicalMass, makeBlackHole) {
+fullofstars.createGravitySystem = function(particleCount, typicalMass, numblackholes, blackholepos) {
     var bodies = [];
 
     var typicalStarSpeed = 0.8 * 7*Math.pow(10, 10) * fullofstars.UNIVERSE_SCALE;
@@ -194,36 +194,57 @@ fullofstars.createGravitySystem = function(particleCount, typicalMass, makeBlack
         // This creates density variations angularly
         angle += 0.10 * Math.sin(angle * Math.PI*2);
 
-        var dist = side * 0.5 * Math.random();
-        dist += side * 0.04 * -Math.cos(angle * Math.PI*2);
+        if(p < numblackholes) {
+          var mass = BLACK_HOLE_MASS;
 
-        var pX = dist * Math.cos(angle);
-        // var pY = pX * 0.2 + 0.9*(side*side*0.01/(dist+side*0.1)) * (-.5 + Math.random());
-        var pY = (Math.random() - 0.5) * (side - dist) * 0.7;
-        var pZ = dist * Math.sin(angle);
+          //start blackholes at some random positions
+          var dist = side * 2 * Math.random();
+          var pX = dist * Math.random()  - dist *0.5;
+          var pY = 0;
+          var pZ =  dist * Math.random()  - dist * 0.5 ;
+          console.log("Black Hole # %d, x %d , z %d", p, pX,pZ);
+
+          // var pX = 0;
+          // var pY = 0;
+          // var pZ = 0;
+
+          var body = new PointMassBody(mass, new THREE.Vector3(pX, pY, pZ), new THREE.Vector3(0, 0, 0));
+
+        } else {
+          var dist = side * 0.5 * Math.random();
+          dist += side * 0.04 * -Math.cos(angle * Math.PI*2);
+
+          var mass = typicalMass * 2 * Math.random() * Math.random();
+
+          var pX = dist * Math.cos(angle);
+          var pY = (Math.random() - 0.5) * (side - dist) * 0.7;
+          var pZ = dist * Math.sin(angle);
+          if (numblackholes > 0){
+            var closest_bh = Math.floor(Math.random() * (fullofstars.NUMBLACKHOLES));
+            var bh_pos = bodies[closest_bh].position;
+          } else{
+            var closest_bh = Math.floor(Math.random() * (fullofstars.NUMBLACKHOLES));
+            var bh_pos = blackholepos[closest_bh];
+          }
+
+          var vel = new THREE.Vector3(pX, pY, pZ);
+          vel.normalize();
+          var requiredSpeed = typicalStarSpeed * 1.8 + typicalStarSpeed * 0.1 * Math.log(1.1+(10*dist/side));
+
+          var xVel = vel.z * requiredSpeed;
+          var yVel = vel.y * requiredSpeed;
+          var zVel = -vel.x * requiredSpeed;
+
+          var vel2 = new THREE.Vector3(xVel, yVel, zVel);
+
+          var pos = new THREE.Vector3(pX + bh_pos.x, pY +bh_pos.y, pZ + bh_pos.z); //center around nearest black hole
+          var body = new PointMassBody(mass, pos, vel2);
 
 
-        if(makeBlackHole && p === 0) {
-          console.log("Creating black hole");
-            var pos = new THREE.Vector3(0,0,0);
-            var mass = BLACK_HOLE_MASS;
-            var xVel = 0;
-            var yVel = 0;
         }
-        else {
-            var pos = new THREE.Vector3(pX, pY, pZ);
-            var mass = typicalMass * 2 * Math.random() * Math.random();
-            
-            var vel = new THREE.Vector3(pX, pY, pZ);
-            vel.normalize();
-            var requiredSpeed = typicalStarSpeed * 1.8 + typicalStarSpeed * 0.1 * Math.log(1.1+(10*dist/side));
+      bodies.push(body);
 
-            var xVel = vel.z * requiredSpeed;
-            var yVel = vel.y * requiredSpeed;
-            var zVel = -vel.x * requiredSpeed;
-        }
-        var body = new PointMassBody(mass, pos, new THREE.Vector3(xVel, yVel, zVel));
-        bodies.push(body);
+
     }
     return bodies;
 };
