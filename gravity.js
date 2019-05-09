@@ -202,7 +202,7 @@ fullofstars.createGravitySystem = function(particleCount, typicalMass, numblackh
             var pY = 0;
             var pZ = 0;
           } else {
-            var dist = side * 4 * Math.random();
+            var dist = side * 8 * Math.random();
             var pX = dist * Math.random()  - dist *0.5;
             var pY = 0;
             var pZ =  dist * Math.random()  - dist * 0.5 ;
