@@ -1,5 +1,26 @@
 window.fullofstars = window.fullofstars || {};
 
+var urls = [
+            'GalaxyTex_PositiveX.jpg',
+            'GalaxyTex_NegativeX.jpg',
+            'GalaxyTex_PositiveY.jpg',
+            'GalaxyTex_NegativeY.jpg',
+            'GalaxyTex_PositiveZ.jpg',
+            'GalaxyTex_NegativeZ.jpg',
+        ];
+
+var light_blue = [
+            'BlueNebular_left.jpg', 
+            'BlueNebular_right.jpg', 
+            'BlueNebular_top.jpg', 
+            'BlueNebular_bottom.jpg',
+            'BlueNebular_front.jpg',
+            'BlueNebular_back.jpg',
+        ];
+
+var blue = ['bkg1_left.jpg', 'bkg1_right.jpg', 'bkg1_top.jpg', 'bkg1_bottom.jpg', 'bkg1_front.jpg','bkg1_back.jpg',];
+var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg', 'bkg2_front.jpg', 'bkg2_back.jpg',];
+
 
 (function() {
 
@@ -67,41 +88,10 @@ window.fullofstars = window.fullofstars || {};
         existingColor.setHSL(0.665 + Math.random() * 0.335, 0.9, 0.5 + 0.5*Math.random());
     }
 
-    function createSkyboxStuff() {
+
+
+    function createSkyboxStuff(urls) {
         // Make a skybox
-        var urls = [
-            // Light blue cubemap
-            // 'BlueNebular_left.jpg',
-            // 'BlueNebular_right.jpg',
-            // 'BlueNebular_top.jpg',
-            // 'BlueNebular_bottom.jpg',
-            // 'BlueNebular_front.jpg',
-            // 'BlueNebular_back.jpg',
-
-            // Blue cubemap
-            // 'bkg1_left.jpg',
-            // 'bkg1_right.jpg',
-            // 'bkg1_top.jpg',
-            // 'bkg1_bottom.jpg',
-            // 'bkg1_front.jpg',
-            // 'bkg1_back.jpg',
-
-            // // Red cubemap
-            // 'bkg2_left.jpg',
-            // 'bkg2_right.jpg',
-            // 'bkg2_top.jpg',
-            // 'bkg2_bottom.jpg',
-            // 'bkg2_front.jpg',
-            // 'bkg2_back.jpg',
-
-            // Mily Way cubemap
-            'GalaxyTex_PositiveX.jpg',
-            'GalaxyTex_NegativeX.jpg',
-            'GalaxyTex_PositiveY.jpg',
-            'GalaxyTex_NegativeY.jpg',
-            'GalaxyTex_PositiveZ.jpg',
-            'GalaxyTex_NegativeZ.jpg',
-        ];
 
         var skyboxScene = new THREE.Scene();
         var skyboxCamera = new THREE.PerspectiveCamera(
@@ -140,7 +130,7 @@ window.fullofstars = window.fullofstars || {};
     }
 
 
-    $(function() {
+    function render_all(urls) {
         var renderer = new THREE.WebGLRenderer({antialias: false});
         renderer.setSize( 300, 200 );
         // renderer.setPixelRatio( window.devicePixelRatio ); // adapt to retina display (runs slower)
@@ -150,7 +140,7 @@ window.fullofstars = window.fullofstars || {};
         document.body.appendChild(renderer.domElement);
         var scene = new THREE.Scene();
 
-
+        
 
         var camera = new THREE.PerspectiveCamera(
             45,         // Field of view
@@ -167,7 +157,7 @@ window.fullofstars = window.fullofstars || {};
 
         camera.position.set(2870, 1070, -275);
 
-        var skybox = createSkyboxStuff();
+        var skybox = createSkyboxStuff(urls);
         fullofstars.updateViewport(window, renderer, camera, skybox);
         window.addEventListener('resize', function() {fullofstars.updateViewport(window, renderer, camera, skybox)});
 
@@ -276,14 +266,32 @@ window.fullofstars = window.fullofstars || {};
         function displayGUI() {
             var testParameters = function() {
                 this.numblackholes = fullofstars.NUMBLACKHOLES;
-                this.bodycount = fullofstars.BODYCOUNT;
+                this.backgrounds = urls;
             };
 
             console.log("displaying the dat.gui GUI");
             var text = new testParameters();
             var gui = new dat.GUI();
-            gui.add(text, 'numblackholes', fullofstars.NUMBLACKHOLES, 10*fullofstars.NUMBLACKHOLES);
-            gui.add(text, 'bodycount', fullofstars.BODYCOUNT, 2*fullofstars.BODYCOUNT);
+            var numblackholes = gui.add(text, 'numblackholes').min(fullofstars.NUMBLACKHOLES).max(10*fullofstars.NUMBLACKHOLES).step(1).listen();
+            var backgrounds = gui.add(text, 'backgrounds', {urls, light_blue, blue, red});
+
+            numblackholes.onFinishChange(function(value) {
+           
+                numblackholes.initialValue = fullofstars.NUMBLACKHOLES;
+                fullofstars.NUMBLACKHOLES = value;
+                console.log(fullofstars.NUMBLACKHOLES);
+                render_all(urls);
+
+            });
+
+            backgrounds.onFinishChange(function(value) {
+                urls = value.split(",");
+                console.log("HERE");
+                console.log(urls);
+                render_all(urls);
+
+            });
+
         }
 
         function flattenToDisk(bodies) {
@@ -387,5 +395,9 @@ window.fullofstars = window.fullofstars || {};
             window.requestAnimationFrame(handleAnimationFrame);
 
         };
+    };
+
+    $(document).ready(function() {
+        render_all(urls);
     });
 })();
