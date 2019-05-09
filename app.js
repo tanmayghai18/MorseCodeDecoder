@@ -5,7 +5,7 @@ var light_blue = ['BlueNebular_left.jpg', 'BlueNebular_right.jpg', 'BlueNebular_
 var blue = ['bkg1_left.jpg', 'bkg1_right.jpg', 'bkg1_top.jpg', 'bkg1_bottom.jpg', 'bkg1_front.jpg','bkg1_back.jpg',];
 var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg', 'bkg2_front.jpg', 'bkg2_back.jpg',];
 
-var globalMesh;
+var globalBackground = milky_way;
 
 (function() {
 
@@ -378,25 +378,24 @@ var globalMesh;
                 numblackholes.initialValue = galaxysim.NUMBLACKHOLES;
                 galaxysim.NUMBLACKHOLES = value;
                 if (galaxysim.NUMBLACKHOLES != numblackholes.initialValue) {
-                    render_all(backgrounds);
+                    render_all(globalBackground);
                 }
             });
 
             backgrounds.onFinishChange(function(value) {
                 if (typeof value === 'string') {
-                    urls = value.split(",");
-                }   
-                if (urls != backgrounds.initialValue) {
-                    render_all(urls);
+                    globalBackground = value.split(",");
+                }  
+                if (globalBackground != backgrounds.initialValue) {
+                    render_all(globalBackground);
                 }
             });
 
             gravitational_constant_scale.onFinishChange(function(value) {
                 gravitational_constant_scale.initialValue = 0.1;
                 galaxysim.GRAVITATIONAL_CONSTANT = value * gravitational_constant_scale;
-                console.log(galaxysim.GRAVITATIONAL_CONSTANT);
                 if (galaxysim.GRAVITATIONAL_CONSTANT != gravitational_constant_scale.initialValue) {
-                    render_all(backgrounds);
+                    render_all(globalBackground);
                 }
             });
 
