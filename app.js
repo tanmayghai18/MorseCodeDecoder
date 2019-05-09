@@ -183,10 +183,12 @@ var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg',
         var cameraMode = CAMERA_MODES.CUSTOM;
 
         var TIME_SCALE = Math.pow(10, 9);
-        var TIME_SCALES = [Math.pow(10, 9), 3*Math.pow(10, 8), 1*Math.pow(10, 8), 0.0];
-        var timeScaleIndex = 0;
         var timeScale = TIME_SCALE;
 
+        // reset initial parameters (in case of restart of scene)
+        galaxysim.GRAVITATIONAL_CONSTANT = 0.5 * galaxysim.G;
+        galaxysim.G_SCALE = 0.5; 
+               
         var PAUSED = false;
 
         $("body").on("keypress", function(e) {
@@ -349,9 +351,8 @@ var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg',
                 if (update_counter === 0 && galaxysim.G_SCALE < 2.0) {
                     galaxysim.GRAVITATIONAL_CONSTANT = galaxysim.G_SCALE * galaxysim.G;
                     galaxysim.G_SCALE += 0.05;
-                    mesh.material.opacity += 0.03;
-                    meshVfx.material.opacity += 0.03;
-
+                    mesh.material.opacity += 0.034;
+                    meshVfx.material.opacity += 0.034;
                 }
 
                 if (update_counter === 0) {
