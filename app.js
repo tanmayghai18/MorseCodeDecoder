@@ -3,7 +3,6 @@ window.fullofstars = window.fullofstars || {};
 
 (function() {
 
-
     fullofstars.updateViewport = function(window, renderer, camera, skybox) {
         var w = window.innerWidth;
         var h = window.innerHeight;
@@ -13,8 +12,6 @@ window.fullofstars = window.fullofstars || {};
         skybox.camera.aspect = w / h;
         skybox.camera.updateProjectionMatrix();
     };
-
-
 
     function createCloudGeometryFromBodies(bodies) {
         // create the particle variables
@@ -67,53 +64,57 @@ window.fullofstars = window.fullofstars || {};
 
     function colorGasCloud(body, existingColor) {
         var massFactor = body.mass / fullofstars.TYPICAL_STAR_MASS;
-        existingColor.setHSL(0.65 + 0.2*Math.cos(body.position.x*0.002), 0.4 + 0.6*Math.random(), 0.5 + 0.5*Math.random());
+        existingColor.setHSL(0.665 + Math.random() * 0.335, 0.9, 0.5 + 0.5*Math.random());
     }
-
-
-    // function updateDebugPanel(heavyBodiesApplicator, vfxBodies, gasBodies) {
-    //     var dp = $("#debug_panel");
-
-    //     dp.find(".heavy-bodies .close-interactions .value").text(formatScientificNotationFixedWidth(heavyBodiesApplicator.closeInteractionCount, 4, 2));
-    //     dp.find(".particles .close-interactions .value").text(formatScientificNotationFixedWidth(heavyBodiesApplicator.closeInteractionCount, 4, 2));
-    // }
-
-
-
-
 
     function createSkyboxStuff() {
         // Make a skybox
         var urls = [
             // Light blue cubemap
-            // 'textures/BlueNebular_left.jpg',
-            // 'textures/BlueNebular_right.jpg',
-            // 'textures/BlueNebular_top.jpg',
-            // 'textures/BlueNebular_bottom.jpg',
-            // 'textures/BlueNebular_front.jpg',
-            // 'textures/BlueNebular_back.jpg',
+            // 'BlueNebular_left.jpg',
+            // 'BlueNebular_right.jpg',
+            // 'BlueNebular_top.jpg',
+            // 'BlueNebular_bottom.jpg',
+            // 'BlueNebular_front.jpg',
+            // 'BlueNebular_back.jpg',
 
             // Blue cubemap
-            // 'textures/bkg1_left.jpg',
-            // 'textures/bkg1_right.jpg',
-            // 'textures/bkg1_top.jpg',
-            // 'textures/bkg1_bottom.jpg',
-            // 'textures/bkg1_front.jpg',
-            // 'textures/bkg1_back.jpg',
+            // 'bkg1_left.jpg',
+            // 'bkg1_right.jpg',
+            // 'bkg1_top.jpg',
+            // 'bkg1_bottom.jpg',
+            // 'bkg1_front.jpg',
+            // 'bkg1_back.jpg',
 
-            // Red cubemap
-            'textures/bkg2_left.jpg',
-            'textures/bkg2_right.jpg',
-            'textures/bkg2_top.jpg',
-            'textures/bkg2_bottom.jpg',
-            'textures/bkg2_front.jpg',
-            'textures/bkg2_back.jpg',
+            // // Red cubemap
+            // 'bkg2_left.jpg',
+            // 'bkg2_right.jpg',
+            // 'bkg2_top.jpg',
+            // 'bkg2_bottom.jpg',
+            // 'bkg2_front.jpg',
+            // 'bkg2_back.jpg',
+
+            // Mily Way cubemap
+            'GalaxyTex_PositiveX.jpg',
+            'GalaxyTex_NegativeX.jpg',
+            'GalaxyTex_PositiveY.jpg',
+            'GalaxyTex_NegativeY.jpg',
+            'GalaxyTex_PositiveZ.jpg',
+            'GalaxyTex_NegativeZ.jpg',
         ];
 
         var skyboxScene = new THREE.Scene();
-        var skyboxCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 100, 60000 );
+        var skyboxCamera = new THREE.PerspectiveCamera(
+            45, 
+            window.innerWidth / window.innerHeight, 
+            100, 
+            60000
+        );
 
-        var cubemap = THREE.ImageUtils.loadTextureCube(urls); // load textures
+        var cubemap = new THREE.CubeTextureLoader()
+            .setPath( 'textures/cubemaps/' )
+            .load(urls);
+
         cubemap.format = THREE.RGBFormat;
 
         var skyboxShader = THREE.ShaderLib['cube']; // init cube shader from built-in lib
@@ -161,8 +162,11 @@ window.fullofstars = window.fullofstars || {};
         var controls = new THREE.OrbitControls( camera, renderer.domElement );
         controls.screenSpacePanning = false;
 
-        controls.minDistance = 200;
-        controls.maxDistance = 5000;
+        controls.minDistance = 300;
+        controls.maxDistance = 7000;
+
+        camera.position.set(2870, 1070, -275);
+
         var skybox = createSkyboxStuff();
         fullofstars.updateViewport(window, renderer, camera, skybox);
         window.addEventListener('resize', function() {fullofstars.updateViewport(window, renderer, camera, skybox)});
@@ -174,13 +178,9 @@ window.fullofstars = window.fullofstars || {};
         var FAR_BODYCOUNT_PER_60FPS_FRAME = Math.max(1, Math.ceil(fullofstars.BODYCOUNT / (120*FAR_UPDATE_PERIOD)));
         // console.log("FAR_BODYCOUNT_PER_60FPS_FRAME", FAR_BODYCOUNT_PER_60FPS_FRAME);
 
-        var blackholearray =[]
-        var bodies = fullofstars.createGravitySystem(fullofstars.BODYCOUNT, fullofstars.TYPICAL_STAR_MASS, fullofstars.NUMBLACKHOLES, blackholearray);
-        for (var i = 0; i < fullofstars.NUMBLACKHOLES; i ++ ){
-          blackholearray.push(bodies[i].position)
-        }
-        var bodiesVfx = fullofstars.createGravitySystem(fullofstars.BODYCOUNT_VFX, 0.3*fullofstars.TYPICAL_STAR_MASS, 0, blackholearray);
-        var bodiesGas = fullofstars.createGravitySystem(fullofstars.BODYCOUNT_GAS, 0.2*fullofstars.TYPICAL_STAR_MASS, 0, blackholearray);
+        var bodies = fullofstars.createGravitySystem(fullofstars.BODYCOUNT, fullofstars.TYPICAL_STAR_MASS, true);
+        var bodiesVfx = fullofstars.createGravitySystem(fullofstars.BODYCOUNT_VFX, 0.3*fullofstars.TYPICAL_STAR_MASS, true);
+        var bodiesGas = fullofstars.createGravitySystem(fullofstars.BODYCOUNT_GAS, 0.2*fullofstars.TYPICAL_STAR_MASS, true);
 
 
         var mesh = new THREE.PointCloud( createCloudGeometryFromBodies(bodies), materials.bright );
@@ -200,27 +200,27 @@ window.fullofstars = window.fullofstars || {};
         scene.add(meshVfx);
 
         var CAMERA_MODES = {ORBIT: 0, CUSTOM: 2}
-        var cameraMode = CAMERA_MODES.ORBIT;
+        var cameraMode = CAMERA_MODES.CUSTOM;
 
         var TIME_SCALE = Math.pow(10, 9);
         var TIME_SCALES = [Math.pow(10, 9), 3*Math.pow(10, 8), 1*Math.pow(10, 8), 0.0];
         var timeScaleIndex = 0;
         var timeScale = TIME_SCALE;
+
+        var PAUSED = false;
+
         $("body").on("keypress", function(e) {
-            console.log("Pressed", e.which);
             if(_.contains([32], e.which)) {
-                console.log("FOO");
-                timeScaleIndex = (timeScaleIndex + 1) % TIME_SCALES.length;
-                timeScale = TIME_SCALES[timeScaleIndex];
+                PAUSED = !PAUSED;
             }
             else if(_.contains([49], e.which)) {
                 makeCameraTransition(function() {
-                    cameraMode = CAMERA_MODES.ORBIT;
+                    cameraMode = CAMERA_MODES.CUSTOM;
                 });
             }
             else if(_.contains([50], e.which)) {
                 makeCameraTransition(function() {
-                    cameraMode = CAMERA_MODES.CUSTOM;
+                    cameraMode = CAMERA_MODES.ORBIT;
                 });
             }
         });
@@ -242,6 +242,7 @@ window.fullofstars = window.fullofstars || {};
 
         var lastT = 0.0;
         var accumulatedFarDt = 0.0;
+        var update_counter = 0;
         var accumulatedRealDtTotal = 0.0;
         var gravityApplicator = fullofstars.createTwoTierSmartGravityApplicator(bodies, bodies);
         var gravityApplicatorVfx = fullofstars.createTwoTierSmartGravityApplicator(bodiesVfx, bodies);
@@ -267,10 +268,11 @@ window.fullofstars = window.fullofstars || {};
             }
         };
 
+
         function displayGUI() { 
             var testParameters = function() {
-            this.numblackholes = fullofstars.NUMBLACKHOLES;
-            this.bodycount = fullofstars.BODYCOUNT;
+                this.numblackholes = fullofstars.NUMBLACKHOLES;
+                this.bodycount = fullofstars.BODYCOUNT;
             };
 
             console.log("displaying the dat.gui GUI");
@@ -278,6 +280,15 @@ window.fullofstars = window.fullofstars || {};
             var gui = new dat.GUI();
             gui.add(text, 'numblackholes', fullofstars.NUMBLACKHOLES, 10*fullofstars.NUMBLACKHOLES);
             gui.add(text, 'bodycount', fullofstars.BODYCOUNT, 2*fullofstars.BODYCOUNT);
+        }
+
+        function flattenToDisk(bodies) {
+            for (var i=0; i < bodies.length; i++) {
+                if (Math.abs(bodies[i].position.y) > 100 && 
+                    (bodies[i].position.y > 0 && bodies[i].velocity.y > 0
+                    || bodies[i].position.y < 0 && bodies[i].velocity.y < 0)) 
+                        bodies[i].velocity.y /= 2;
+            }
         }
 
 
@@ -327,11 +338,25 @@ window.fullofstars = window.fullofstars || {};
                 }
 
                 // This step updates velocities, so we can reuse forces for next position update (they will be the same because positios did not change)
-                if(accumulatedFarDt >= TIME_SCALE / 60.0) {
+                if (accumulatedFarDt >= TIME_SCALE / 60.0) {
                     gravityApplicator.updateForces(FAR_BODYCOUNT_PER_60FPS_FRAME);
                     gravityApplicatorVfx.updateForces(FAR_BODYCOUNT_PER_60FPS_FRAME*20);
                     gravityApplicatorGas.updateForces(FAR_BODYCOUNT_PER_60FPS_FRAME);
                     accumulatedFarDt -= TIME_SCALE/60;
+                    update_counter = (update_counter + 1) % 100;
+                }
+
+                if (update_counter === 0 && fullofstars.G_SCALE < 2.0) {
+                    fullofstars.GRAVITATIONAL_CONSTANT = fullofstars.G_SCALE * fullofstars.G;
+                    fullofstars.G_SCALE += 0.05;
+                    mesh.material.opacity += 0.03;
+                    meshVfx.material.opacity += 0.03;
+                }
+
+                if (update_counter === 0) {
+                    flattenToDisk(bodies);
+                    flattenToDisk(bodiesVfx);
+                    flattenToDisk(bodiesGas);
                 }
 
                 fullofstars.PointMassBody.velocityVerletUpdate(bodies, dt, false);
@@ -345,11 +370,14 @@ window.fullofstars = window.fullofstars || {};
             };
 
             function handleAnimationFrame(dt) {
-                update(dt);
-                controls.update();
-                render();
+                if (!PAUSED) {
+                    update(dt);
+                    controls.update();
+                    render();
+                }
                 window.requestAnimationFrame(handleAnimationFrame);
             };
+
             displayGUI();
             window.requestAnimationFrame(handleAnimationFrame);
 
