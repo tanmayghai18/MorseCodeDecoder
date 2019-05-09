@@ -238,11 +238,8 @@ var globalBackground = milky_way;
 
         var started = false;
         THREE.DefaultLoadingManager.onProgress = function (item, loaded, total) {
-            var loadingMessages = [
-                "Inventing universe...", "Making apple pie...", "Venturing to the stars...", "Awaiting glorious dawn..."
-            ];
-            var textIndex = Math.min(Math.floor((loaded / total) * loadingMessages.length), loadingMessages.length-1);
-            $("#loading_indicator .loading_text").text(loadingMessages[textIndex]);
+            var loadingMessage = "Never apologize for burning too brightly or collapsing into yourself. That is how galaxies are made.";
+            $("#loading_indicator .loading_text").text(loadingMessage);
             $("#loading_indicator .loading_bar").width(100*loaded/total + "%");
             if(loaded === total && !started) {
                 started = true;
@@ -360,7 +357,7 @@ var globalBackground = milky_way;
             var testParameters = function() {
                 this.numblackholes = galaxysim.NUMBLACKHOLES;
                 this.backgrounds = milky_way;
-                this.gravitational_constant_scale = 0.1;
+                this.gravity_strength = 1.0;
             };
 
             console.log("displaying the dat.gui GUI");
@@ -371,7 +368,7 @@ var globalBackground = milky_way;
             var f3 = gui.addFolder('Gravitational Constant');
             var numblackholes = f1.add(text, 'numblackholes').min(galaxysim.NUMBLACKHOLES).max(5*galaxysim.NUMBLACKHOLES).step(1).listen();
             var backgrounds = f2.add(text, 'backgrounds', {milky_way, light_blue, blue, red});
-            var gravitational_constant_scale = f3.add(text, 'gravitational_constant_scale').min(0.1).max(100).step(0.1).listen();
+            var gravity_strength = f3.add(text, 'gravity_strength').min(0.1).max(100).step(0.1).listen();
             gui.remember(testParameters);
 
             numblackholes.onFinishChange(function(value) {
@@ -391,12 +388,8 @@ var globalBackground = milky_way;
                 }
             });
 
-            gravitational_constant_scale.onFinishChange(function(value) {
-                gravitational_constant_scale.initialValue = 0.1;
-                galaxysim.GRAVITATIONAL_CONSTANT = value * gravitational_constant_scale;
-                if (galaxysim.GRAVITATIONAL_CONSTANT != gravitational_constant_scale.initialValue) {
-                    render_all(globalBackground);
-                }
+            gravity_strength.onFinishChange(function(value) {
+                galaxysim.GRAVITATIONAL_CONSTANT *= value;
             });
 
         }
