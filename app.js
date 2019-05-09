@@ -253,36 +253,7 @@ var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg',
         };
 
 
-        function displayGUI() {
-            var testParameters = function() {
-                this.numblackholes = galaxysim.NUMBLACKHOLES;
-                this.backgrounds = milky_way;
-            };
-
-            console.log("displaying the dat.gui GUI");
-            var text = new testParameters();
-            var gui = new dat.GUI();
-            var numblackholes = gui.add(text, 'numblackholes').min(galaxysim.NUMBLACKHOLES).max(5*galaxysim.NUMBLACKHOLES).step(1).listen();
-            var backgrounds = gui.add(text, 'backgrounds', {milky_way, light_blue, blue, red});
-
-            numblackholes.onFinishChange(function(value) {
-                numblackholes.initialValue = galaxysim.NUMBLACKHOLES;
-                galaxysim.NUMBLACKHOLES = value;
-                if (galaxysim.NUMBLACKHOLES != numblackholes.initialValue) {
-                    render_all(urls);
-                    gui.hide();
-                }
-            });
-
-            backgrounds.onFinishChange(function(value) {
-                urls = value.split(",");
-                if (urls != backgrounds.initialValue) {
-                    render_all(urls);
-                    gui.hide();
-                }
-            });
-
-        }
+        
 
         function flattenToDisk(bodies) {
             for (var i=0; i < bodies.length; i++) {
@@ -379,14 +350,43 @@ var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg',
                 render();
                 window.requestAnimationFrame(handleAnimationFrame);
             };
-
-            displayGUI();
             window.requestAnimationFrame(handleAnimationFrame);
 
         };
     };
 
+    function displayGUI() {
+            var testParameters = function() {
+                this.numblackholes = galaxysim.NUMBLACKHOLES;
+                this.backgrounds = milky_way;
+            };
+
+            console.log("displaying the dat.gui GUI");
+            var text = new testParameters();
+            var gui = new dat.GUI();
+            var numblackholes = gui.add(text, 'numblackholes').min(galaxysim.NUMBLACKHOLES).max(5*galaxysim.NUMBLACKHOLES).step(1).listen();
+            var backgrounds = gui.add(text, 'backgrounds', {milky_way, light_blue, blue, red});
+            gui.remember(testParameters);
+
+            numblackholes.onFinishChange(function(value) {
+                numblackholes.initialValue = galaxysim.NUMBLACKHOLES;
+                galaxysim.NUMBLACKHOLES = value;
+                if (galaxysim.NUMBLACKHOLES != numblackholes.initialValue) {
+                    render_all(backgrounds);
+                }
+            });
+
+            backgrounds.onFinishChange(function(value) {
+                urls = value.split(",");
+                if (urls != backgrounds.initialValue) {
+                    render_all(urls);
+                }
+            });
+
+        }
+
     $(document).ready(function() {
+        displayGUI();
         render_all(milky_way);
     });
 })();
