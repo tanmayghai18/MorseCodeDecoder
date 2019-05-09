@@ -1,11 +1,4 @@
-var milky_way = ['GalaxyTex_PositiveX.jpg', 'GalaxyTex_NegativeX.jpg', 'GalaxyTex_PositiveY.jpg', 'GalaxyTex_NegativeY.jpg', 'GalaxyTex_PositiveZ.jpg', 'GalaxyTex_NegativeZ.jpg',];
-
-var light_blue = ['BlueNebular_left.jpg', 'BlueNebular_right.jpg', 'BlueNebular_top.jpg', 'BlueNebular_bottom.jpg', 'BlueNebular_front.jpg', 'BlueNebular_back.jpg',];
-
-var blue = ['bkg1_left.jpg', 'bkg1_right.jpg', 'bkg1_top.jpg', 'bkg1_bottom.jpg', 'bkg1_front.jpg','bkg1_back.jpg',];
-var red = ['bkg2_left.jpg', 'bkg2_right.jpg', 'bkg2_top.jpg', 'bkg2_bottom.jpg', 'bkg2_front.jpg', 'bkg2_back.jpg',];
-
-var globalBackground = milky_way;
+var globalBackground = galaxysim.milky_way;
 
 (function() {
 
@@ -57,10 +50,10 @@ var globalBackground = milky_way;
             // Normal color
             var massFactor = body.mass / galaxysim.TYPICAL_STAR_MASS;
 
-            if(massFactor < 0.002) {
+            if (massFactor < 0.002) {
                 existingColor.setRGB(0.9+0.1*Math.random(), 0.4 + 0.4*Math.random(), 0.4 + 0.4 * Math.random());
             }
-            else if(massFactor < 0.004) {
+            else if (massFactor < 0.004) {
                 existingColor.setRGB(0.5+0.1*Math.random(), 0.5 + 0.2*Math.random(), 0.9 + 0.1 * Math.random());
             } else {
                 existingColor.setRGB(0.6+0.4 * massFactor, 0.6+0.4 * massFactor, 0.5 + 0.3 * massFactor);
@@ -87,7 +80,7 @@ var globalBackground = milky_way;
         );
 
         var cubemap = new THREE.CubeTextureLoader()
-            .setPath( 'textures/cubemaps/' )
+            .setPath(galaxysim.cubemap_path)
             .load(urls);
 
         cubemap.format = THREE.RGBFormat;
@@ -153,12 +146,11 @@ var globalBackground = milky_way;
 
         var FAR_UPDATE_PERIOD = 2.0; // How long between updates of far interactions
         var FAR_BODYCOUNT_PER_60FPS_FRAME = Math.max(1, Math.ceil(galaxysim.BODYCOUNT / (120*FAR_UPDATE_PERIOD)));
-        // console.log("FAR_BODYCOUNT_PER_60FPS_FRAME", FAR_BODYCOUNT_PER_60FPS_FRAME);
 
         var blackholearray =[]
         var bodies = galaxysim.createGravitySystem(galaxysim.BODYCOUNT, galaxysim.TYPICAL_STAR_MASS, galaxysim.NUMBLACKHOLES, blackholearray);
         for (var i = 0; i < galaxysim.NUMBLACKHOLES; i ++ ){
-          blackholearray.push(bodies[i].position)
+            blackholearray.push(bodies[i].position)
         }
         var bodiesVfx = galaxysim.createGravitySystem(galaxysim.BODYCOUNT_VFX, 0.3*galaxysim.TYPICAL_STAR_MASS, 0, blackholearray);
         var bodiesGas = galaxysim.createGravitySystem(galaxysim.BODYCOUNT_GAS, 0.2*galaxysim.TYPICAL_STAR_MASS, 0, blackholearray);
@@ -193,17 +185,17 @@ var globalBackground = milky_way;
         var PAUSED = false;
 
         $("body").on("keypress", function(e) {
-            if (_.contains([32], e.which)) {
+            if (_.contains([32], e.which)) {            // space bar
                 PAUSED = !PAUSED;
-            } else if (_.contains([114], e.which)) {
+            } else if (_.contains([114], e.which)) {    // 'r' key
                 controls.autoRotate = !controls.autoRotate;
             }
-            else if(_.contains([49], e.which)) {
+            else if(_.contains([49], e.which)) {        // '1' key
                 makeCameraTransition(function() {
                     cameraMode = CAMERA_MODES.CUSTOM;
                 });
             }
-            else if(_.contains([50], e.which)) {
+            else if(_.contains([50], e.which)) {        // '2' key
                 makeCameraTransition(function() {
                     cameraMode = CAMERA_MODES.ORBIT;
                 });
@@ -238,7 +230,8 @@ var globalBackground = milky_way;
 
         var started = false;
         THREE.DefaultLoadingManager.onProgress = function (item, loaded, total) {
-            var loadingMessage = "Never apologize for burning too brightly or collapsing into yourself. That is how galaxies are made.";
+            var loadingMessage = `Never apologize for burning too brightly or collapsing 
+                                 into yourself. That is how galaxies are made.`;
             $("#loading_indicator .loading_text").text(loadingMessage);
             $("#loading_indicator .loading_bar").width(100*loaded/total + "%");
             if(loaded === total && !started) {
@@ -250,18 +243,14 @@ var globalBackground = milky_way;
             }
         };
 
-
-        
-
         function flattenToDisk(bodies) {
             for (var i=0; i < bodies.length; i++) {
                 if (Math.abs(bodies[i].position.y) > 100 &&
-                    (bodies[i].position.y > 0 && bodies[i].velocity.y > 0
-                    || bodies[i].position.y < 0 && bodies[i].velocity.y < 0))
-                        bodies[i].velocity.y /= 2;
+                  (bodies[i].position.y > 0 && bodies[i].velocity.y > 0
+                  || bodies[i].position.y < 0 && bodies[i].velocity.y < 0))
+                    bodies[i].velocity.y /= 2;
             }
         }
-
 
         function startGalaxySimulation() {
             function update(t) {
@@ -276,14 +265,18 @@ var globalBackground = milky_way;
                     camera.position.copy(bodies[0].position);
                     camera.position.add(new THREE.Vector3(
                         Math.cos(accumulatedRealDtTotal*cameraRotationSpeed) * positionScale,
-                        0.5 * positionScale * 0.7 * Math.sin(accumulatedRealDtTotal * 0.2), // scale to slow vertical movement
+                        0.5 * positionScale * 0.7 * Math.sin(accumulatedRealDtTotal * 0.2),
                         Math.sin(accumulatedRealDtTotal*cameraRotationSpeed) * positionScale
                     ));
 
                     var cameraLookatRotationSpeed = 0; // default: 0.01
                     var cameraLookAtScale = 0.2 * positionScale;
                     var cameraLookAtPos = new THREE.Vector3().copy(bodies[0].position);
-                    cameraLookAtPos.add(new THREE.Vector3(Math.cos(accumulatedRealDtTotal*cameraLookatRotationSpeed) * cameraLookAtScale, -positionScale * 0.07 * Math.sin(accumulatedRealDtTotal * 0.2), Math.sin(accumulatedRealDtTotal*cameraLookatRotationSpeed) * cameraLookAtScale))
+                    cameraLookAtPos.add(new THREE.Vector3(
+                        Math.cos(accumulatedRealDtTotal*cameraLookatRotationSpeed) * cameraLookAtScale, 
+                        -positionScale * 0.07 * Math.sin(accumulatedRealDtTotal * 0.2), 
+                        Math.sin(accumulatedRealDtTotal*cameraLookatRotationSpeed) * cameraLookAtScale
+                    ))
                     camera.lookAt(cameraLookAtPos);
                 }
 
@@ -308,7 +301,6 @@ var globalBackground = milky_way;
                     meshGas.geometry.vertices[i].copy(bodiesGas[i].position);
                 }
 
-                // This step updates velocities, so we can reuse forces for next position update (they will be the same because positios did not change)
                 if (accumulatedFarDt >= TIME_SCALE / 60.0) {
                     gravityApplicator.updateForces(FAR_BODYCOUNT_PER_60FPS_FRAME);
                     gravityApplicatorVfx.updateForces(FAR_BODYCOUNT_PER_60FPS_FRAME*20);
@@ -356,18 +348,25 @@ var globalBackground = milky_way;
     function displayGUI() {
             var testParameters = function() {
                 this.numblackholes = galaxysim.NUMBLACKHOLES;
-                this.backgrounds = milky_way;
+                this.backgrounds = galaxysim.milky_way;
                 this.gravity_strength = 1.0;
             };
 
-            console.log("displaying the dat.gui GUI");
             var text = new testParameters();
             var gui = new dat.GUI();
             var f1 = gui.addFolder('Blackholes');
             var f2 = gui.addFolder('Backgrounds');
             var f3 = gui.addFolder('Gravitational Constant');
-            var numblackholes = f1.add(text, 'numblackholes').min(galaxysim.NUMBLACKHOLES).max(5*galaxysim.NUMBLACKHOLES).step(1).listen();
-            var backgrounds = f2.add(text, 'backgrounds', {milky_way, light_blue, blue, red});
+            var numblackholes = f1.add(text, 'numblackholes')
+                .min(galaxysim.NUMBLACKHOLES)
+                .max(5*galaxysim.NUMBLACKHOLES)
+                .step(1).listen();
+            var backgrounds = f2.add(text, 'backgrounds', {
+                'Milky Way': galaxysim.milky_way,
+                'Light Blue': galaxysim.light_blue,
+                'Blue': galaxysim.blue,
+                'Red': galaxysim.red,
+            });
             var gravity_strength = f3.add(text, 'gravity_strength').min(0.1).max(100).step(0.1).listen();
             gui.remember(testParameters);
 
@@ -396,6 +395,6 @@ var globalBackground = milky_way;
 
     $(document).ready(function() {
         displayGUI();
-        render_all(milky_way);
+        render_all(galaxysim.milky_way);
     });
 })();

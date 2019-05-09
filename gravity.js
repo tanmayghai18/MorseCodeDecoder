@@ -205,7 +205,6 @@ galaxysim.createGravitySystem = function(particleCount, typicalMass, numblackhol
             var pY = 0;
             var pZ =  dist * Math.random()  - dist * 0.5 ;
           }
-          console.log("Black Hole # %d, x %d , z %d", p, pX,pZ);
 
           var body = new PointMassBody(mass, new THREE.Vector3(pX, pY, pZ), new THREE.Vector3(0, 0, 0));
 
@@ -242,7 +241,6 @@ galaxysim.createGravitySystem = function(particleCount, typicalMass, numblackhol
 
         }
       bodies.push(body);
-
 
     }
     return bodies;

@@ -1,3 +1,37 @@
+// cubemaps
+galaxysim.cubemap_path = 'textures/cubemaps/';
+galaxysim.milky_way = ['GalaxyTex_PositiveX.jpg',
+    'GalaxyTex_NegativeX.jpg',
+    'GalaxyTex_PositiveY.jpg',
+    'GalaxyTex_NegativeY.jpg',
+    'GalaxyTex_PositiveZ.jpg',
+    'GalaxyTex_NegativeZ.jpg'
+];
+
+galaxysim.light_blue = ['BlueNebular_left.jpg',
+    'BlueNebular_right.jpg',
+    'BlueNebular_top.jpg',
+    'BlueNebular_bottom.jpg',
+    'BlueNebular_front.jpg',
+    'BlueNebular_back.jpg'
+];
+
+galaxysim.blue = ['bkg1_left.jpg',
+    'bkg1_right.jpg',
+    'bkg1_top.jpg',
+    'bkg1_bottom.jpg',
+    'bkg1_front.jpg',
+    'bkg1_back.jpg'
+];
+
+galaxysim.red = ['bkg2_left.jpg',
+    'bkg2_right.jpg',
+    'bkg2_top.jpg',
+    'bkg2_bottom.jpg',
+    'bkg2_front.jpg',
+    'bkg2_back.jpg'
+];
+
 galaxysim.createAllMaterials = function() {
 
     function createParticleMaterial(texture, size, color, blending, opacity) {
