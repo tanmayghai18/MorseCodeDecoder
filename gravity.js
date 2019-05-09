@@ -196,17 +196,18 @@ fullofstars.createGravitySystem = function(particleCount, typicalMass, numblackh
 
         if(p < numblackholes) {
           var mass = BLACK_HOLE_MASS;
-
           //start blackholes at some random positions
-          var dist = side * 2 * Math.random();
-          var pX = dist * Math.random()  - dist *0.5;
-          var pY = 0;
-          var pZ =  dist * Math.random()  - dist * 0.5 ;
+          if (numblackholes === 1){
+            var pX = 0;
+            var pY = 0;
+            var pZ = 0;
+          } else {
+            var dist = side * 4 * Math.random();
+            var pX = dist * Math.random()  - dist *0.5;
+            var pY = 0;
+            var pZ =  dist * Math.random()  - dist * 0.5 ;
+          }
           console.log("Black Hole # %d, x %d , z %d", p, pX,pZ);
-
-          // var pX = 0;
-          // var pY = 0;
-          // var pZ = 0;
 
           var body = new PointMassBody(mass, new THREE.Vector3(pX, pY, pZ), new THREE.Vector3(0, 0, 0));
 
