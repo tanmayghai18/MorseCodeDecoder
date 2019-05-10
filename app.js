@@ -387,7 +387,7 @@ galaxysim.meshVfx = new THREE.PointCloud();
                 'Blue': 2,
                 'Red': 3,
             });
-            var gravity_strength = f3.add(text, 'gravity_strength').min(0.1).max(100).step(0.1).listen();
+            var gravity_strength = f3.add(text, 'gravity_strength').min(0.1).max(10).step(0.1).listen();
             var large_stars_opacity = f4.add(text, 'large_stars_opacity').min(0).max(1).step(0.1).listen();
             var small_stars_opacity = f4.add(text, 'small_stars_opacity').min(0).max(1).step(0.1).listen();
             var gas_opacity = f4.add(text, 'gas_opacity').min(0).max(1).step(0.1).listen();
