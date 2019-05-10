@@ -359,9 +359,9 @@ galaxysim.meshVfx = new THREE.PointCloud();
                 this.numblackholes = galaxysim.NUMBLACKHOLES;
                 this.backgrounds = galaxysim.milky_way;
                 this.gravity_strength = 1.0;
-                this.mesh_opacity = 0;
-                this.meshvfx_opacity = 0;
-                this.meshgas_opacity = 0;
+                this.large_stars_opacity = 0;
+                this.small_stars_opacity = 0;
+                this.gas_opacity = 0;
             };
 
             var text = new testParameters();
@@ -382,9 +382,10 @@ galaxysim.meshVfx = new THREE.PointCloud();
                 'Red': 3,
             });
             var gravity_strength = f3.add(text, 'gravity_strength').min(0.1).max(100).step(0.1).listen();
-            var mesh_opacity = f4.add(text, 'mesh_opacity').min(0).max(1).step(0.1).listen();
-            var meshvfx_opacity = f4.add(text, 'meshvfx_opacity').min(0).max(1).step(0.1).listen();
-            var meshgas_opacity = f4.add(text, 'meshgas_opacity').min(0).max(1).step(0.1).listen();
+            var large_stars_opacity = f4.add(text, 'large_stars_opacity').min(0).max(1).step(0.1).listen();
+            var small_stars_opacity = f4.add(text, 'small_stars_opacity').min(0).max(1).step(0.1).listen();
+            var gas_opacity = f4.add(text, 'gas_opacity').min(0).max(1).step(0.1).listen();
+            gui.remember(testParameters);
 
             numblackholes.onFinishChange(function(value) {
                 numblackholes.initialValue = galaxysim.NUMBLACKHOLES;
@@ -404,40 +405,16 @@ galaxysim.meshVfx = new THREE.PointCloud();
                 galaxysim.GRAVITATIONAL_CONSTANT = galaxysim.G * value;
             });
 
-            mesh_opacity.onFinishChange(function(value) {
-                var curr_opacity = galaxysim.mesh.material.opacity;
-                if (value == 0) {
-                    galaxysim.mesh.material.opacity *= 0;
-                }
-                if (value > curr_opacity) {
-                    galaxysim.mesh.material.opacity += value;
-                } else {
-                    galaxysim.mesh.material.opacity -= value;
-                }
+            large_stars_opacity.onFinishChange(function(value) {
+                galaxysim.mesh.material.opacity = value;
             });
 
-            meshvfx_opacity.onFinishChange(function(value) {
-                var curr_opacity = galaxysim.meshVfx.material.opacity;
-                if (value == 0) {
-                    galaxysim.meshVfx.material.opacity *= 0;
-                }
-                if (value > curr_opacity) {
-                    galaxysim.meshVfx.material.opacity += value;
-                } else {
-                    galaxysim.meshVfx.material.opacity -= value;
-                }
+            small_stars_opacity.onFinishChange(function(value) {
+                galaxysim.meshVfx.material.opacity = value;
             });
 
-            meshgas_opacity.onFinishChange(function(value) {
-                var curr_opacity = galaxysim.meshGas.material.opacity;
-                if (value == 0) {
-                    galaxysim.meshGas.material.opacity *= 0;
-                }
-                if (value > curr_opacity) {
-                    galaxysim.meshGas.material.opacity += value;
-                } else {
-                    galaxysim.meshGas.material.opacity -= value;
-                }
+            gas_opacity.onFinishChange(function(value) {
+                galaxysim.meshGas.material.opacity = value;
             });
 
         }
