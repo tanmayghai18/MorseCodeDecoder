@@ -185,6 +185,8 @@ galaxysim.meshVfx = new THREE.PointCloud();
         var TIME_SCALE = Math.pow(10, 9);
         var timeScale = TIME_SCALE;
 
+        var audio = new Audio('audio/shooting_stars.mp3');
+
         // reset initial parameters (in case of restart of scene)
         galaxysim.GRAVITATIONAL_CONSTANT = 0.5 * galaxysim.G;
         galaxysim.G_SCALE = 0.5; 
@@ -200,6 +202,8 @@ galaxysim.meshVfx = new THREE.PointCloud();
                 controls.autoRotate = !controls.autoRotate;
             } else if (_.contains([108], e.which)) {    // 'l' key
                 renderer.setPixelRatio( window.devicePixelRatio );
+            } else if (_.contains([97], e.which)) {    // 'a' key
+                audio.play();
             } else if(_.contains([49], e.which)) {      // '1' key
                 makeCameraTransition(function() {
                     cameraMode = CAMERA_MODES.CUSTOM;
