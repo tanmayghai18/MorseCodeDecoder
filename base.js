@@ -21,4 +21,6 @@ galaxysim.BODYCOUNT = 500;          // default: 500
 galaxysim.BODYCOUNT_VFX = 20000;    // default: 20000
 galaxysim.BODYCOUNT_GAS = 450;      // default: 300
 
+galaxysim.audio = new Audio('audio/shooting_stars.mp3');
+
 })();
