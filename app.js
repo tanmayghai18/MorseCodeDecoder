@@ -190,6 +190,7 @@ galaxysim.meshVfx = new THREE.PointCloud();
         galaxysim.G_SCALE = 0.5; 
                
         var PAUSED = false;
+        var GRAVITY_OVERRIDE = false;
 
         $("body").on("keypress", function(e) {
             console.log(e.which);
@@ -319,7 +320,8 @@ galaxysim.meshVfx = new THREE.PointCloud();
                 }
 
                 if (update_counter === 0 && galaxysim.G_SCALE < 2.0) {
-                    galaxysim.GRAVITATIONAL_CONSTANT = galaxysim.G_SCALE * galaxysim.G;
+                    if (!GRAVITY_OVERRIDE) 
+                        galaxysim.GRAVITATIONAL_CONSTANT = galaxysim.G_SCALE * galaxysim.G;
                     galaxysim.G_SCALE += 0.05;
                     mesh.material.opacity += 0.034;
                     meshVfx.material.opacity += 0.034;
@@ -403,6 +405,7 @@ galaxysim.meshVfx = new THREE.PointCloud();
             });
 
             gravity_strength.onFinishChange(function(value) {
+                GRAVITY_OVERRIDE = true;
                 galaxysim.GRAVITATIONAL_CONSTANT = galaxysim.G * value;
             });
 
