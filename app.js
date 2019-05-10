@@ -1,4 +1,7 @@
 var globalBackground = galaxysim.milky_way;
+galaxysim.mesh = new THREE.PointCloud();
+galaxysim.meshGas = new THREE.PointCloud();
+galaxysim.meshVfx = new THREE.PointCloud();
 
 (function() {
 
@@ -160,10 +163,14 @@ var globalBackground = galaxysim.milky_way;
 
         var mesh = new THREE.PointCloud( createCloudGeometryFromBodies(bodies), materials.bright );
         mesh.frustumCulled = false;
+        galaxysim.mesh = mesh;
         var meshVfx = new THREE.PointCloud( createCloudGeometryFromBodies(bodiesVfx), materials.brightSmall );
         meshVfx.frustumCulled = false;
+        galaxysim.meshVfx = meshVfx;
         var meshGas = new THREE.PointCloud( createCloudGeometryFromBodies(bodiesGas), materials.gasCloud );
         meshGas.frustumCulled = false;
+        galaxysim.meshGas = meshGas;
+
 
         colorParticles(bodies, mesh, colorStar);
         colorParticles(bodiesVfx, meshVfx, colorStar);
@@ -352,6 +359,9 @@ var globalBackground = galaxysim.milky_way;
                 this.numblackholes = galaxysim.NUMBLACKHOLES;
                 this.backgrounds = galaxysim.milky_way;
                 this.gravity_strength = 1.0;
+                this.mesh_opacity = 0;
+                this.meshvfx_opacity = 0;
+                this.meshgas_opacity = 0;
             };
 
             var text = new testParameters();
@@ -359,6 +369,7 @@ var globalBackground = galaxysim.milky_way;
             var f1 = gui.addFolder('Blackholes');
             var f2 = gui.addFolder('Backgrounds');
             var f3 = gui.addFolder('Gravitational Constant');
+            var f4 = gui.addFolder('Material Visibility');
             var numblackholes = f1.add(text, 'numblackholes')
                 .min(galaxysim.NUMBLACKHOLES)
                 .max(5*galaxysim.NUMBLACKHOLES)
@@ -370,6 +381,9 @@ var globalBackground = galaxysim.milky_way;
                 'Red': 3,
             });
             var gravity_strength = f3.add(text, 'gravity_strength').min(0.1).max(100).step(0.1).listen();
+            var mesh_opacity = f4.add(text, 'mesh_opacity').min(0).max(1).step(0.1).listen();
+            var meshvfx_opacity = f4.add(text, 'meshvfx_opacity').min(0).max(1).step(0.1).listen();
+            var meshgas_opacity = f4.add(text, 'meshgas_opacity').min(0).max(1).step(0.1).listen();
             gui.remember(testParameters);
 
             numblackholes.onFinishChange(function(value) {
@@ -387,7 +401,43 @@ var globalBackground = galaxysim.milky_way;
             });
 
             gravity_strength.onFinishChange(function(value) {
-                galaxysim.GRAVITATIONAL_CONSTANT *= value;
+                galaxysim.GRAVITATIONAL_CONSTANT = galaxysim.G * value;
+            });
+
+            mesh_opacity.onFinishChange(function(value) {
+                var curr_opacity = galaxysim.mesh.material.opacity;
+                if (value == 0) {
+                    galaxysim.mesh.material.opacity *= 0;
+                }
+                if (value > curr_opacity) {
+                    galaxysim.mesh.material.opacity += value;
+                } else {
+                    galaxysim.mesh.material.opacity -= value;
+                }
+            });
+
+            meshvfx_opacity.onFinishChange(function(value) {
+                var curr_opacity = galaxysim.meshVfx.material.opacity;
+                if (value == 0) {
+                    galaxysim.meshVfx.material.opacity *= 0;
+                }
+                if (value > curr_opacity) {
+                    galaxysim.meshVfx.material.opacity += value;
+                } else {
+                    galaxysim.meshVfx.material.opacity -= value;
+                }
+            });
+
+            meshgas_opacity.onFinishChange(function(value) {
+                var curr_opacity = galaxysim.meshGas.material.opacity;
+                if (value == 0) {
+                    galaxysim.meshGas.material.opacity *= 0;
+                }
+                if (value > curr_opacity) {
+                    galaxysim.meshGas.material.opacity += value;
+                } else {
+                    galaxysim.meshGas.material.opacity -= value;
+                }
             });
 
         }
