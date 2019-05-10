@@ -399,6 +399,7 @@ galaxysim.meshVfx = new THREE.PointCloud();
                 galaxysim.skyBoxMaterial.uniforms['tCube'].value.dispose();
                 galaxysim.skyBoxMaterial.uniforms['tCube'].value = galaxysim.cubemaps[index];
                 galaxysim.skyBoxMaterial.uniformsNeedUpdate = true;
+                globalBackground = galaxysim.cubemaps_list[index];
             });
 
             gravity_strength.onFinishChange(function(value) {
