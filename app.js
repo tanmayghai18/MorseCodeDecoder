@@ -385,7 +385,6 @@ galaxysim.meshVfx = new THREE.PointCloud();
             var mesh_opacity = f4.add(text, 'mesh_opacity').min(0).max(1).step(0.1).listen();
             var meshvfx_opacity = f4.add(text, 'meshvfx_opacity').min(0).max(1).step(0.1).listen();
             var meshgas_opacity = f4.add(text, 'meshgas_opacity').min(0).max(1).step(0.1).listen();
-            gui.remember(testParameters);
 
             numblackholes.onFinishChange(function(value) {
                 numblackholes.initialValue = galaxysim.NUMBLACKHOLES;
