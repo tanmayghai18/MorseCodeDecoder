@@ -116,8 +116,6 @@ galaxysim.meshVfx = new THREE.PointCloud();
     function render_all(urls) {
         var renderer = new THREE.WebGLRenderer({antialias: false});
         renderer.setSize( 300, 200 );
-        // renderer.setPixelRatio( window.devicePixelRatio ); // adapt to retina display (runs slower)
-        renderer.setPixelRatio( 1 );
         renderer.setClearColor(0x000000);
         renderer.sortObjects = false;
         document.body.appendChild(renderer.domElement);
@@ -194,12 +192,14 @@ galaxysim.meshVfx = new THREE.PointCloud();
         var PAUSED = false;
 
         $("body").on("keypress", function(e) {
+            console.log(e.which);
             if (_.contains([32], e.which)) {            // space bar
                 PAUSED = !PAUSED;
             } else if (_.contains([114], e.which)) {    // 'r' key
                 controls.autoRotate = !controls.autoRotate;
-            }
-            else if(_.contains([49], e.which)) {        // '1' key
+            } else if (_.contains([108], e.which)) {    // 'l' key
+                renderer.setPixelRatio( window.devicePixelRatio );
+            } else if(_.contains([49], e.which)) {      // '1' key
                 makeCameraTransition(function() {
                     cameraMode = CAMERA_MODES.CUSTOM;
                 });
