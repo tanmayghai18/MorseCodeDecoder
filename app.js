@@ -356,6 +356,7 @@ var globalBackground = galaxysim.milky_way;
 
             var text = new testParameters();
             var gui = new dat.GUI();
+            gui.close();
             var f1 = gui.addFolder('Blackholes');
             var f2 = gui.addFolder('Backgrounds');
             var f3 = gui.addFolder('Gravitational Constant');
@@ -370,7 +371,6 @@ var globalBackground = galaxysim.milky_way;
                 'Red': 3,
             });
             var gravity_strength = f3.add(text, 'gravity_strength').min(0.1).max(100).step(0.1).listen();
-            gui.remember(testParameters);
 
             numblackholes.onFinishChange(function(value) {
                 numblackholes.initialValue = galaxysim.NUMBLACKHOLES;
@@ -387,7 +387,7 @@ var globalBackground = galaxysim.milky_way;
             });
 
             gravity_strength.onFinishChange(function(value) {
-                galaxysim.GRAVITATIONAL_CONSTANT *= value;
+                galaxysim.GRAVITATIONAL_CONSTANT = galaxysim.G * value;
             });
 
         }
