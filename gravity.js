@@ -181,7 +181,6 @@ galaxysim.createGravitySystem = function(particleCount, typicalMass, numblackhol
     var bodies = [];
 
     var typicalStarSpeed = 0.8 * 7*Math.pow(10, 10) * galaxysim.UNIVERSE_SCALE;
-    console.log("typical star speed", typicalStarSpeed);
     var side = 4300.0;
 
     var BLACK_HOLE_MASS = galaxysim.TYPICAL_STAR_MASS * 7000;

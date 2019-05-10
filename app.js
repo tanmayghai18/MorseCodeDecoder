@@ -366,6 +366,7 @@ galaxysim.meshVfx = new THREE.PointCloud();
 
             var text = new testParameters();
             var gui = new dat.GUI();
+            gui.close();
             var f1 = gui.addFolder('Blackholes');
             var f2 = gui.addFolder('Backgrounds');
             var f3 = gui.addFolder('Gravitational Constant');
