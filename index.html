@@ -133,6 +133,7 @@ src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
   </div>
 </div>
 
+
 <p>There are three particle types, each representing a different stellar object. By default, there are 20,000 small stars, 500 large stars, and 450 gas clouds. The texture images used for each are shown below.</p>
 
 <div class="carousel-non-resize">
@@ -148,6 +149,11 @@ src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
 </div>
 
 <p>These textures are handled by the Three.js texture loader - we use additive blending for the stars and normal blending for the gas clouds. A visual effect used alongside the coalescence code is that the stars are initially invisible and the opacity is slowly increased as the final shape of the galaxy emerges. This is done to simulate the birth of stars from gas cloud collapse. The opacities for each material can be overridden in the control panel in the live demo.</p>
+
+
+<h3 id="visual-effects">Control Panel</h3>
+
+<p>To allow for customizability of controls such as the number of "black holes" or the color of the background to dynamically change the scene, we utilized dat.gui, a controller library for Javascript, to configure a gui that contains sliders and dropdowns for our various variables. The user has the ability to pick the number of black holes (between 1 and 5), between 4 different background choices that we have detailed above, the "gravity strength" of each black hole (between 0.1 and 10) and the opacities for the various types of bodies in our scene (small stars, large stars, gas clouds all between 0 and 1). </p>
 
 <h2 id="results">Results</h2>
 
