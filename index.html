@@ -1,82 +1,58 @@
 <!DOCTYPE HTML>
 <html>
-<head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>Deciphering Morse Code Audio from Various Sound Sources</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<!-- Favicon -->
-<link rel="shortcut icon" href="./images/logo.png">
-
-<!-- Fonts -->
-<link href="https://fonts.googleapis.com/css?family=Quicksand:300,400,500,700" rel="stylesheet">
-
-<!-- Animate.css -->
-<link rel="stylesheet" href="./css/animate.css">
-<!-- Icomoon Icon Fonts-->
-<link rel="stylesheet" href="./css/icomoon.css">
-<!-- Bootstrap  -->
-<link rel="stylesheet" href="./css/bootstrap.css">
-<!-- Theme style  -->
-<link rel="stylesheet" href="./css/style.css">
-
-<!-- Blog stuff -->
-<link rel="stylesheet" href="./css/syntax.css">
-
-<script type="text/javascript" async
-src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
-</script>
-
-<!-- End blog stuff -->
-
-<!-- Modernizr JS -->
-<script src="../js/modernizr-2.6.2.min.js"></script>
-<!-- FOR IE9 below -->
-<!--[if lt IE 9]>
-<script src="../js/respond.min.js"></script>
-<![endif]-->
-
-</head>
-
-  <body>
-
-  <div id="colorlib-page">
-
-    <div id="colorlib-main">   
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Deciphering Morse Code Audio from Various Sound Sources</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <!-- Favicon -->
+      <link rel="shortcut icon" href="./images/logo.png">
+      <!-- Fonts -->
+      <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400,500,700" rel="stylesheet">
+      <!-- Animate.css -->
+      <link rel="stylesheet" href="./css/animate.css">
+      <!-- Icomoon Icon Fonts-->
+      <link rel="stylesheet" href="./css/icomoon.css">
+      <!-- Bootstrap  -->
+      <link rel="stylesheet" href="./css/bootstrap.css">
+      <!-- Theme style  -->
+      <link rel="stylesheet" href="./css/style.css">
+      <!-- Blog stuff -->
+      <link rel="stylesheet" href="./css/syntax.css">
+      <script type="text/javascript" async
+         src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+      <!-- End blog stuff -->
+      <!-- Modernizr JS -->
+      <script src="../js/modernizr-2.6.2.min.js"></script>
+      <!-- FOR IE9 below -->
+      <!--[if lt IE 9]>
+      <script src="../js/respond.min.js"></script>
+      <![endif]-->
+   </head>
+   <body>
+      <div id="colorlib-page">
+      <div id="colorlib-main">
       <div id="colorlib-post">
-
-        <h1 class="post-title" style="text-align: center">
-          Deciphering Morse Code Audio from Various Sound Sources
-        </h1>      
-
-        <h3 style="text-align: center">         
-            CSCI 566: Deep Learning, Fall 2020
-        </h3>  
-
-        <h4 style="text-align: center">         
-            TAROS (team id: 9)
-        </h4>         
-
-<p><img src="model.gif" alt="" style="width: 60%; display: block; margin-left: auto; margin-right: auto;" /></p>
-
-<h4 style="text-align: center">         
-    <a href="demo.html">Live Demo</a> | <a href="https://github.com/aparikh98/CosmologicalSimulation">Source Code</a> | <a href="https://youtu.be/ROuIVfnqMWk">Project Video</a>
-</h4>
-
-<h2 id="abstract">Abstract</h2>
-
-<p>Morse code is a series of dots and dashes representing different text characters, digits and punctuation marks. It is transmitted by on-off keying of an information carrying medium such as electric current, radio waves, visible light or sound waves. In audio form, morse code can be generated via various methods, like tapping (on different materials such as bells, musical instruments, car honks, etc.). Humans can decipher morse code in any given sound source, if they are first trained on a single source. This project's goal is to develop a system which will replicate this "human-like" behavior in deciphering morse code, i.e. the system will be able to decipher the morse code into english text regardless of the sound source used to generate the input.</p>
-
- <h3 id="">Problem Statement</h3>
- 
-        <p> More specifically, to develop such a morse code recognition system, we will decipher morse code audio into english text, irrespective of the sound source used to generate the morse code</p>
-        <p> Input: morse coude audio .wav</p>
-        <p> Output: english text corresponding to the inputted morse </p>
-        
- <h2 id="dataset curation">Dataset Curation</h2>
-        
-        <p> We used 13 different audio mediums for testing and experimenting throughout our project; you can hear small snippets of each below </p>
-        
-  </body>
+      <h1 class="post-title" style="text-align: center">
+         Deciphering Morse Code Audio from Various Sound Sources
+      </h1>
+      <h3 style="text-align: center">         
+         CSCI 566: Deep Learning, Fall 2020
+      </h3>
+      <h4 style="text-align: center">         
+         TAROS (team id: 9)
+      </h4>
+      <p><img src="model.gif" alt="" style="width: 60%; display: block; margin-left: auto; margin-right: auto;" /></p>
+      <h4 style="text-align: center">         
+         <a href="demo.html">Live Demo</a> | <a href="https://github.com/aparikh98/CosmologicalSimulation">Source Code</a> | <a href="https://youtu.be/ROuIVfnqMWk">Project Video</a>
+      </h4>
+      <h2 id="abstract">Abstract</h2>
+      <p>Morse code is a series of dots and dashes representing different text characters, digits and punctuation marks. It is transmitted by on-off keying of an information carrying medium such as electric current, radio waves, visible light or sound waves. In audio form, morse code can be generated via various methods, like tapping (on different materials such as bells, musical instruments, car honks, etc.). Humans can decipher morse code in any given sound source, if they are first trained on a single source. This project's goal is to develop a system which will replicate this "human-like" behavior in deciphering morse code, i.e. the system will be able to decipher the morse code into english text regardless of the sound source used to generate the input.</p>
+      <h3 id="">Problem Statement</h3>
+      <p> More specifically, to develop such a morse code recognition system, we will decipher morse code audio into english text, irrespective of the sound source used to generate the morse code</p>
+      <p> Input: morse coude audio .wav</p>
+      <p> Output: english text corresponding to the inputted morse </p>
+      <h2 id="dataset curation">Dataset Curation</h2>
+      <p> We used 13 different audio mediums for testing and experimenting throughout our project; you can hear small snippets of each below </p>
+   </body>
 </html>
