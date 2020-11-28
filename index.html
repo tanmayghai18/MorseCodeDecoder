@@ -50,23 +50,75 @@
       <p><a href="https://en.wikipedia.org/wiki/Morse_code">Morse code</a> is a series of dots and dashes representing different text characters, digits and punctuation marks. It is transmitted by on-off keying of an information carrying medium such as electric current, radio waves, visible light or sound waves. In audio form, morse code can be generated via various methods, like tapping (on different materials such as bells, musical instruments, car honks, etc.). Humans can decipher morse code in any given sound source, if they are first trained on a single source. This project's goal is to develop a system which will replicate this "human-like" behavior in deciphering morse code, i.e. the system will be able to decipher the morse code into english text regardless of the sound source used to generate the input.</p>
       <h3 id="">Problem Statement</h3>
       <p> More specifically, to develop such a morse code recognition system, we will decipher morse code audio into english text, irrespective of the sound source used to generate the morse code</p>
-         <p> <b>Input</b>: morse coude audio .wav</p>
+         <p> <b>Input</b>: morse code audio .wav</p>
          <p> <b>Output</b>: english text corresponding to the inputted morse </p>
-      <h2 id="dataset curation">Dataset Curation</h2>
+      <h2 id="approach">Approach</h3>
+         <p>Our approach is broken up into two main phases: dataset curation and training. In dataset curation, we pre-recorded audio files of different mediums and along with a text corpus, created a labeled morse code dataset. For training, we trained a C-RNN model with 2 Bi-directional LSTMs and CTC loss.</p>
+      <h3 id="dataset curation">Dataset Curation</h3>
       <p> We used 13 different audio mediums for testing and experimenting throughout our project; you can hear small snippets of 12 of them below (the 13th medium was "beeps" which are regularly used with morse code) </p>
+         
       <audio controls>
          <source src="bell.wav" type="audio/wav">
+      </audio>
+      <audio controls>
          <source src="clap.wav" type="audio/wav">
+      </audio>
+      <audio controls>
          <source src="drums_2.wav" type="audio/wav">
+      </audio>
+      <audio controls>
          <source src="glass.wav" type="audio/wav">
+      </audio>
+      <audio controls>
          <source src="guitar1.wav" type="audio/wav">
+      </audio>
+      <audio controls>
          <source src="guitar2.wav" type="audio/wav">
+      </audio>
+      <audio controls>
          <source src="guitar3.wav" type="audio/wav">
+      </audio>
+      <audio controls>
          <source src="guitar4.wav" type="audio/wav">
+      </audio>
+      <audio controls>
          <source src="guitar5.wav" type="audio/wav">
+      </audio>
+      <audio controls>
          <source src="guitar6.wav" type="audio/wav">
+      </audio>
+      <audio controls>
          <source src="horn.wav" type="audio/wav">
+      </audio>
+      <audio controls>
          <source src="steel.wav" type="audio/wav">
       </audio>
+         
+      <p> Our first step to formulate our dataset was to take each of these audio waves and create individual "dots" and "dashes" out of them. Below is an example (with the guitar1 medium): </p>
+         
+      <audio controls>
+         <source src="guitar1-dot.ogg" type="audio/ogg">
+      </audio>
+      <audio controls>
+         <source src="guitar1-dash.ogg" type="audio/ogg">
+      </audio>
+         
+      <p>After this, with the help of our <a>href="https://www.kaggle.com/mikeortman/wikipedia-sentences">text corpus</a>, we formulated sentences using the above dot and dash files. Here's <b>"In the end, we all felt like we ate too much"</b> in morse code!</p>
+         
+      <audio controls>
+         <source src="6guitar_1.wav" type="audio/wav">
+      </audio>
+         
+      <h3 id="training">Training</h3>
+       
+         <p> Our best performing model ended up being a C-RNN architecture with <a href="https://distill.pub/2017/ctc/">CTC loss</a> (Connectionist Temporal Classification), where we first converted our morse audio files into 2d images representing the amplitude vs. time of the wave. However, this took experimentation and iteration to realize this was our best approach. Below, we detail two of our earlier approaches before arriving at our final model.</p>
+         
+         <h4 id="">Iteration 1: CNN - Linear - Bi-directional GRU</h4>
+         
+         <h4 id="">Iteration 2: CNN - LSTM - CCE (Categorical Cross Entropy)</h4>
+         
+         <h4 id="">Final Model: CNN - LSTM - CTC </h4>
+         
+      <h2 id="experiments">Experiments</h2>
    </body>
 </html>
