@@ -29,25 +29,6 @@
       <!--[if lt IE 9]>
       <script src="../js/respond.min.js"></script>
       <![endif]-->
-       
-        <style>
-        * {
-          box-sizing: border-box;
-        }
-
-        .column {
-          float: left;
-          width: 50%;
-          padding: 5px;
-        }
-
-        /* Clearfix (clear floats) */
-        .row::after {
-          content: "";
-          clear: both;
-          display: table;
-        }
-        </style>
    </head>
    <body>
       <div id="colorlib-page">
@@ -62,7 +43,7 @@
       <h4 style="text-align: center">         
          TAROS (team id: 9)
       </h4>
-      <p><img src="model.gif" alt="" style="width: 80%; display: block; margin-left: auto; margin-right: auto;" /></p>
+      <p><img src="images/problem.png" alt="" style="width: 80%; display: block; margin-left: auto; margin-right: auto;" /></p>
       <h4 style="text-align: center">         
          <a href="demo.html">Live Demo</a> | <a href="https://github.com/OnurOrhan/taros-deep-learning">Source Code</a> | <a href="https://drive.google.com/file/d/13p0bNzOEm7Hwt-gDemuwvl4lOxGW5G3V/view?usp=sharing">Project Video</a>
       </h4>
@@ -237,7 +218,7 @@
 
          
       <h3 id="training">Training</h3>
-       
+         <p><img src="model.gif" alt="" style="width: 80%; display: block; margin-left: auto; margin-right: auto;" /></p>
          <p> Our best performing model ended up being a C-RNN architecture with <a href="https://distill.pub/2017/ctc/">CTC loss</a> (Connectionist Temporal Classification), where we first converted our morse audio files into 2d images representing the amplitude vs. time of the wave. However, this took experimentation and iteration to realize this was our best approach. Below, we detail two of our earlier approaches before arriving at our final model.</p>
 
          <div>
@@ -266,61 +247,17 @@
             </div>
          </div>
 
-        <br>
-        <div>
-            <h4 id=""><b>Final Model: CNN - LSTM - CTC (Connectionist Temporal Classification)</b></h4>
+         <h4 id="">Final Model: CNN - LSTM - CTC (Connectionist Temporal Classification)</h4>
 
-            <p><b><i>Model Architecture</i></b></p>
-            <p><b>Input:</b>  2D images of Morse audio signal amplitude/time graphs<br><b>Output:</b>  Text sequence</p>
-            
-            <ol type="1">
-                <li>CNN</li>
-                <ul>
-                    <li>2 x (Conv2D + MaxPooling2D layers)</li>
-                    <li>Dense layer</li>
-                    <li>Dropout layer</li>
-                </ul>
-                <li>Two bi-directional LSTMs</li>
-                <ul>
-                    <li>128 units</li>
-                    <li>64 units</li>
-                </ul>
-                <li>Dense layer</li>
-                <li>CTC Loss</li>
-            </ol>
-            
-            <p><b>Total Trainable Parameters:</b>  1,021,240</p>
-            
-            <div class="row">
-              <div class="column">
-                <figure>
-                  <img src="images/crnn_architecture.png" alt="CRNN Model Architecture" style="padding: 20px; width:100%; border: 1px solid #555;">
-                  <figcaption style="color:black;text-align:center;">CRNN Model Architecture</figcaption>
-                </figure>
-              </div>
-              <div class="column">
-                <p>This was our best performing model, among all three. The initial CNN, the later two bi-directional LSTMs and the final CTC layers are together called a Convolutional Recurrent Neural Network (CRNN) model. The architecture basically outputs a sequence when given an image-type input, as shown in the figure on the left. Used in speech and optical character recognition, we thought this architecture would suit our problem as well.</p>
-              </div>
-            </div>
-            
-            <div style="border: 1px solid #555;">
-                <div class="column">
-                    <figure>
-                      <img src="images/ctc_training.JPG" alt="CRNN Training" style="padding: 20px; width:100%;">
-                      <figcaption style="color:black;text-align:center;">Training and validation loss</figcaption>
-                    </figure>
-                </div>
-                <div class="column">
-                    <figure>
-                      <img src="images/ctc_reconstructions.JPG" alt="CRNN Reconstructions" style="padding: 20px; width:100%;">
-                      <figcaption style="color:black;text-align:center;">Test accuracy and reconstructions</figcaption>
-                    </figure>
-                </div>            
-            </div>
-        </div>
-          
+         <p> The model success is because of CTC loss specifically designed for sequence models. In a nutshell, CNN compress and stores the relevant in fixed dimensional feature vector. This feature vector is given to a sequence model, In this case - LSTM. CTC layer take this sequence representation, finds the span for each character in the image, assign each fixed span a single character and merge repeated spans. </p>
 
-      <h2 id="experiments">Experiments</h2>
+         <p>  Human generated Morse Code models greatly benefits from this as span for each character in a amplitude-time graph (composed of dot and dash) can be variable and CTC layer will be able to resolve this issue of variation. Below is an image of how it works.
+         </p>
+         <p><img src="images/ctc_loss.png" alt="" style="width: 80%; display: block; margin-left: auto; margin-right: auto;" /></p>
+
+
+      <br>
+         <h2 id="experiments">Experiments</h2>
 
          <h3>Comparison with Baseline (held one out)</h3>
 
@@ -448,14 +385,7 @@
             <li>First train on artificially synthesized dataset and then retrain a few layers with a small dataset of human recorded morse audio files on various mediums.</li>
          </ul>
       </div>
-          
-      <div>
-         <h2 id="resources">Resources</h2>
-         <ul>
-            <li><a href="https://www.researchgate.net/figure/The-architecture-of-CRNN-1-convolutional-layers-extracting-feature-from-the-original_fig4_331916824">CRNN Model Architecture - Example Figure</a></li>
-         </ul>
       </div>
-          
       </div>
       </div>
 
