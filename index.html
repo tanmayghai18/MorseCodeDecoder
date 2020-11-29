@@ -220,22 +220,31 @@
       <h3 id="training">Training</h3>
        
          <p> Our best performing model ended up being a C-RNN architecture with <a href="https://distill.pub/2017/ctc/">CTC loss</a> (Connectionist Temporal Classification), where we first converted our morse audio files into 2d images representing the amplitude vs. time of the wave. However, this took experimentation and iteration to realize this was our best approach. Below, we detail two of our earlier approaches before arriving at our final model.</p>
-         
-         <h4>Iteration 1: CNN - Linear - Bi-directional GRU (Gated Recurrent Unit)</h4>
-         
-         <h4>Iteration 2: CNN - LSTM - CCE (Categorical Cross Entropy)</h4>
-         
-         <p> This model utilizes a CNN - LSTM architecture with 1-D input (being the audio arrays itself), followed by a loss calculation done by <a href="tensorflow.org/api_docs/python/tf/keras/losses/CategoricalCrossentropy">categorical cross entropy</a> (or softmax loss). Originally, we had used <a href="https://www.tensorflow.org/api_docs/python/tf/keras/losses/MeanSquaredError">MSE</a> (or mean-squared error) loss to evaluate this model, however, after some research, we realized that CCE (for our use case) was a much better measure of classification, due to the fact that we have over 50+ classes for our task. In such tasks, as compared to regression, MSE doesn't penalize mis-classifications enough to learn effectively. After over 20+ different experiments, tuning and hyperparameter tuning for this model, we settled on 100 epochs, with a batch size of 16. Our highest run for this model was <b>~70.28%</b>. Below you can see the training and validation loss curves as well as some sample reconstructions with this method.</p>
 
-         <p> Architecturally, we used two 1-D convolution layers, the first with a 16 filter size and the second with 32, respectively, both with kernel size of 3. The first convolution layer is following by a (15, 15) max pooling layer and the second convolution layer is followed by a batch normalization layer and a (12, 12) max pooling layer. Following all this, we have 2 bi-directional LSTM layers, each with 256 units, followed by a dense-softmax activation layer. We settled on an Adam optimizer with a learning rate of 0.0005. </p>
+         <div>
+            <h4>Iteration 1: CNN - Linear - Bi-directional GRU (Gated Recurrent Unit)</h4>
+            <p>
+               Inspired by deep speech 2 architecture which has given good results in the field of speech recognition, we have constructed a model that takes 1D arrays of audio samples as input and generates deciphered text. This model consists of 4 1D convolution layers with filter sizes 8, 16, 32, 64, followed by a linear layer, two bidirectional GRUs with 256 hidden units and a linear layer with 70 hidden units and a dense layer with softmax activation. After each convolution we are using a dropout layer with a rate of 0.3. The loss is calculated using categorical cross entropy and we used adam optimizer with a learning rate of 0.001.
+            </p>
+            <p>
+               After multiple trails by tuning the parameters like number of layers, hidden units we are able to achieve a training accuracy of only 60% and our validation accuracy kept oscillating between 20% - 50%. For our test data we have received an accuracy of 53%. After several trails we came to a conclusion that this architecture will not give promising results.
+            </p>
+         </div>
+         <div>
+            <h4>Iteration 2: CNN - LSTM - CCE (Categorical Cross Entropy)</h4>
+         
+            <p> This model utilizes a CNN - LSTM architecture with 1-D input (being the audio arrays itself), followed by a loss calculation done by <a href="tensorflow.org/api_docs/python/tf/keras/losses/CategoricalCrossentropy">categorical cross entropy</a> (or softmax loss). Originally, we had used <a href="https://www.tensorflow.org/api_docs/python/tf/keras/losses/MeanSquaredError">MSE</a> (or mean-squared error) loss to evaluate this model, however, after some research, we realized that CCE (for our use case) was a much better measure of classification, due to the fact that we have over 50+ classes for our task. In such tasks, as compared to regression, MSE doesn't penalize mis-classifications enough to learn effectively. After over 20+ different experiments, tuning and hyperparameter tuning for this model, we settled on 100 epochs, with a batch size of 16. Our highest run for this model was <b>~70.28%</b>. Below you can see the training and validation loss curves as well as some sample reconstructions with this method.</p>
 
-         <div class="carousel-non-resize">
-           <div class="carousel-col2">
-             <img src="images/cce_loss_experiment.png" style="width:100%" />
-           </div>
-           <div class="carousel-col2">
-             <img src="images/cce_loss_reconstructions.png" style="width:100%" />
-           </div>
+            <p> Architecturally, we used two 1-D convolution layers, the first with a 16 filter size and the second with 32, respectively, both with kernel size of 3. The first convolution layer is following by a (15, 15) max pooling layer and the second convolution layer is followed by a batch normalization layer and a (12, 12) max pooling layer. Following all this, we have 2 bi-directional LSTM layers, each with 256 units, followed by a dense-softmax activation layer. We settled on an Adam optimizer with a learning rate of 0.0005. </p>
+
+            <div class="carousel-non-resize">
+               <div class="carousel-col2">
+                  <img src="images/cce_loss_experiment.png" style="width:100%" />
+               </div>
+               <div class="carousel-col2">
+                  <img src="images/cce_loss_reconstructions.png" style="width:100%" />
+               </div>
+            </div>
          </div>
 
          <h4 id="">Final Model: CNN - LSTM - CTC (Connectionist Temporal Classification)</h4>
@@ -328,7 +337,7 @@
                </div>
             </div>
 
-         <h3>Comparision between Amplitude-time graph and Spectograms</h3>
+         <h3>Comparision between Amplitude-time graph and Spectrograms</h3>
          <p>The proposed design which constructs amplitude time graphs from the audio files out-performs most existing approaches that make use of frequency spectrograms. The model when trained with amplitude-time graphs on 11 different sound sources and tested with an unseen sound source 'Clap' gave a character level accuracy of <b>97%</b>. Similarly, the same model when trained with frequency spectrograms on same training and test sets gave a character level accuracy of 74%. Also, as you can see in the graph below when trained with Amplitude-time graph the model converges faster than frequency spectrograms. <b>This suggests that amplitude time graphs work well in generalised morse code recognition than frequency spectrograms. </b></p>
 
             <table class="evaluation_images" style="width:100%">
