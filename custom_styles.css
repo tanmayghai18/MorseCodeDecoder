@@ -1,0 +1,10 @@
+.audio_files td{
+    border: 1px solid white;
+    padding: 0px;
+}
+
+.evaluation_images th, .evaluation_images td{
+    border: 1px solid white;
+    padding: 0px;
+    text-align: -webkit-center;
+}
